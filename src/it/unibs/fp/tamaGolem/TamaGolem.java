@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TamaGolem {
-    private List<Pietra> listaPietre = new ArrayList<>();
+    private List<Stone> listaPietre = new ArrayList<>();
     private int puntiSalute = 100;
 
     public TamaGolem() {}
 
-    public TamaGolem(List<Pietra> listaPietre) {
+    public TamaGolem(List<Stone> listaPietre) {
         this.listaPietre = listaPietre;
     }
 
