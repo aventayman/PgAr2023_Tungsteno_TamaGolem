@@ -11,4 +11,6 @@ public enum Element {
     ANTIMATTER,
     LIGHT,
     DARKNESS,
+    ERROR
+
 }
