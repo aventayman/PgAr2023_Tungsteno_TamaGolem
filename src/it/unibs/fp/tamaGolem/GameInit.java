@@ -127,31 +127,39 @@ public class GameInit {
     /**
      * Metodo per verificare se il valore inserito è valido per essere assegnato a un elemento
      * @param value valore da controllare
-     * @param n valore N degli elementi della partita in corso
+     * @param game partita in corso
      * @param list lista in cui fare il controllo, verificando che non vi sia presente, e quindi che sia stato scelto
      * @return true se il valore è valido, false altrimenti
      */
-    private static boolean valueControl (int value, ArrayList<int> list, int n){
+    private static boolean valueControl (int value, ArrayList<int> list, Game game){
+        int counter = 0;
+
         for (int iValue : list){
             if(iValue == value)
-                return false;
+                counter++;
         }
 
-        if (value > n)
+        //se il valore scelto è presente più di spe-volte (ovvero il numero massimo di un singolo elemento
+        // nel sacco comune) all'interno della lista di controllo, allora non è valido
+        //Lo stesso vale se è maggiore del numero massimo di elementi disponibili, poichè non corrisponderebbe ad alcun
+        //elemento presente
+
+        if (value > game.getStonesNum() || counter > game.getStonesPerElement())
             return false;
 
         return true;
     }
+
     /**
      * Metodo che inserisce nella lista fornita gli elementi scelti dal giocatore
      */
-    public static void stoneElementsChoice (int n, ArrayList<Element> golemElements) {
+    public static void stoneElementsChoice (ArrayList<Element> golemElements, Game game) {
 
         Scanner scanner = new Scanner(System.in);
 
 
-        Menu choiceMenu = new Menu("Choose your elements", availableElements(n), true, true,
-                true);
+        Menu choiceMenu = new Menu("Choose your elements:", availableElements(game.getStonesNum()), true,
+                true, true);
 
         //Stampa inizialmente il menu di scelta degli elementi, disponibili in numero pari ad n
 
@@ -164,26 +172,49 @@ public class GameInit {
         //intero valido
 
         //NOTA: MANCANO I CONTROLLI SUL VALORE SCANNERIZZATO (SE è FLOAT, UN CARATTERE E NON UN NUMERO...)
-        while (nextElement > n) {
+        while (nextElement > game.getStonesNum()) {
             System.out.println("Incorrect value entered. Please insert another value for the element choice:");
             nextElement = scanner.nextInt();
         }
+
+        //Se il valore inserito è corretto lo converto in un elemento e lo inserisco nella lista golemElements fornita
         golemElements.add(choice(nextElement));
         ArrayList<int> alreadyTaken = new ArrayList<int>();
+
+        //Lista necessaria per tenere traccia degli elementi già pesca
         alreadyTaken.add(nextElement);
 
-        int previousElement = nextElement;
-
-        for (int i = 1; i < n; i++) {
+        //Ripete il procedimento d' inserimento effettuando ogni volta i controlli necessari, fino a riempire la lista
+        // fornita
+        for (int i = 1; i < game.getStonesNum(); i++) {
             System.out.println("Choose the next element from the previous list");
             nextElement = scanner.nextInt();
-            while (valueControl(nextElement, alreadyTaken, n)){
+            while (valueControl(nextElement, alreadyTaken, game)){
                 System.out.println("Incorrect value entered. Please insert another value for the element choice:");
                 nextElement = scanner.nextInt();
-
             }
-            previousElement = nextElement;
             golemElements.add(choice(nextElement));
+            alreadyTaken.add(nextElement);
         }
+    }
+
+    /**
+     * Metodo di uscita dal gioco
+     * @return true se viene inserito Y, false se viene inserito N
+     */
+    public static boolean quitGame () {
+        System.out.println("Do you want to quit the game? (Y/N)");
+        Scanner sc = new Scanner(System.in);
+        char choice = sc.next().charAt(0);
+        Character.toUpperCase(choice);
+        switch (choice) {
+            case 'Y' -> {
+                return true;
+            }
+            case 'N' -> {
+                return false;
+            }
+        }
+        return false;
     }
 }
