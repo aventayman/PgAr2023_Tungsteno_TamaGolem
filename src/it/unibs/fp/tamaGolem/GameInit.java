@@ -17,12 +17,14 @@ public class GameInit {
 
     private static final String INCORRECT_ELEMENT =
             "Incorrect value entered. Please insert another value for the element choice: ";
+    private static final String CHOOSE_ELEMENT =
+            "Choose the element number: ";
     private static final String NEXT_ELEMENT =
             "Choose the next element from the previous list: ";
     private static final String CHOOSE_DIFFICULTY =
             "Choose the difficulty of the game: ";
     private static final String EXIT =
-            "Do you want to quit the game? (Y/N) ";
+            "Do you want to play again? (Y/N) ";
     /**
      * Metodo che genera il menu iniziale e registra la scelta della difficoltà
      * @return il numero di elementi che verranno utilizzati nella partita e nella generazione dell'equilibrio
@@ -84,16 +86,15 @@ public class GameInit {
      * @return il numero di pietre per elemento
      */
     private static int stonesPerElement (int chestDim, int amount) {
+        //PROBLEMA: SE IL GIOCATORE SCEGLIE ZERO AVVIENE UNA DIVISIONE PER ZERO QUI
+        //CI DOVREBBE ESSERE LA POSSIBILITA DI USCIRE
         return chestDim/amount;
     }
 
     /**
      * Metodo che inizializza i dati inseriti tramite il valore amount fornito
      * @param amount numero N di elementi della partita
-     * @param s il numero di pietre per golem per la partita
-     * @param g il numero di golem per la partita
-     * @param c il numero di pietre presenti nella sacca comune
-     * @param spe il numero di pietre per elemento
+     * @param game la partita corrente
      */
     public static void dataInit (int amount, Game game){
         game.setStonesNum(GameInit.stonesNum(amount)) ;
@@ -108,7 +109,7 @@ public class GameInit {
         elements = Element.values();
         for (int i = 0; i < game.getChestDim(); i++){
             for (int j = 0; j < game.getStonesPerElement(); j++) {
-                Stone stone = new Stone(elements(i));
+                Stone stone = new Stone(elements[i]);
                 stoneChest.add(stone);
             }
         }
@@ -184,31 +185,33 @@ public class GameInit {
 
         //Dichiara nextElement, variabile che serve a memorizzare il carattere inserito dal giocatore,
         //al fine di memorizzare la sua scelta
-        int nextElement = choiceMenu.choose();
+
+        //QUESTA COSA NON HA ALCUN SENSO VA CAMBIATA DEL TUTTO, ANCHE PERCHE ACCETTA INDICI CHE
+        //NON DOVREBBERO ESSERE ACCETTATI, E DOBBIAMO CAMBIARE L'ENUM
+        int element = choiceMenu.choose();
+        golemElements.add(choice(element));
 
         //Se il valore inserito è maggiore di n, esso non corrisponderà ad alcun elemento, perciò viene visualizzato
         //un messaggio di errore assieme alla richiesta di reinserimento, fino a quando non viene inserito un
         //intero valido
-
-        if (nextElement > game.getStonesNum())
-            nextElement = InputData.readIntegerBetween(INCORRECT_ELEMENT, 0, game.getStonesNum());
+        element = InputData.readIntegerBetween(CHOOSE_ELEMENT, 0, game.getStonesNum());
 
         //Se il valore inserito è corretto lo converto in un elemento e lo inserisco nella lista golemElements fornita
-        golemElements.add(choice(nextElement));
+        golemElements.add(choice(element));
         List<Integer> alreadyTaken = new ArrayList<>();
 
         //Lista necessaria per tenere traccia degli elementi già pesca
-        alreadyTaken.add(nextElement);
+        alreadyTaken.add(element);
 
         //Ripete il procedimento d' inserimento effettuando ogni volta i controlli necessari, fino a riempire la lista
         // fornita
         for (int i = 1; i < game.getStonesNum(); i++) {
-            nextElement = InputData.readInteger(NEXT_ELEMENT);
-            while (valueControl(nextElement, alreadyTaken, game)){
-                nextElement = InputData.readInteger(INCORRECT_ELEMENT);
+            element = InputData.readInteger(NEXT_ELEMENT);
+            while (valueControl(element, alreadyTaken, game)){
+                element = InputData.readInteger(INCORRECT_ELEMENT);
             }
-            golemElements.add(choice(nextElement));
-            alreadyTaken.add(nextElement);
+            golemElements.add(choice(element));
+            alreadyTaken.add(element);
         }
     }
 

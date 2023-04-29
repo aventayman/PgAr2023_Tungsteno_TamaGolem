@@ -26,6 +26,6 @@ public class Main {
             List<Element> elementChoice = new ArrayList<>();
 
             GameInit.stoneElementsChoice(elementChoice, game);
-        }while (GameInit.quitGame());
+        } while (!GameInit.quitGame());
     }
 }
