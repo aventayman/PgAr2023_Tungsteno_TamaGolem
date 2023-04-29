@@ -18,6 +18,8 @@ public class GameInit {
             "Incorrect value entered. Please insert another value for the element choice: ";
     private static final String NEXT_ELEMENT =
             "Choose the next element from the previous list: ";
+    private static final String CHOOSE_DIFFICULTY =
+            "Choose the difficulty of the game: ";
     private static final String EXIT =
             "Do you want to quit the game? (Y/N) ";
     /**
@@ -28,6 +30,7 @@ public class GameInit {
         int amount = 0;
         String [] mode = {"Easy", "Normal", "Hardcore"};
         Menu modeMenu = new Menu("TamaGolem", mode, true, true, true);
+        System.out.println(CHOOSE_DIFFICULTY);
         int choice = modeMenu.choose();
 
         switch (choice) {
@@ -91,13 +94,17 @@ public class GameInit {
      * @param c il numero di pietre presenti nella sacca comune
      * @param spe il numero di pietre per elemento
      */
-    public static void dataInit (int amount, int s, int g, int c, int spe){
-        s = GameInit.stonesNum(amount);
-        g = GameInit.golemNum(amount, s);
-        c = GameInit.chestDim(amount, s, g);
-        spe = GameInit.stonesPerElement(c, amount);
+    public static void dataInit (int amount, Game game){
+        game.setStonesNum(GameInit.stonesNum(amount)) ;
+        game.setGolemNum(GameInit.golemNum(amount, game.getStonesNum()));
+        game.setChestDim(GameInit.chestDim(amount, game.getStonesNum(), game.getGolemNum()));
+        game.setStonesPerElement(GameInit.stonesPerElement(game.getChestDim(), amount));
     }
 
+    private static void createStoneChest (Game game){
+        List<Stone> stoneChest = new ArrayList<>();
+
+    }
     /**
      * Metodo per la scelta di un elemento per lo scontro
      * @param choice numero inserito dall'utente, che corrisponde ad un elemento

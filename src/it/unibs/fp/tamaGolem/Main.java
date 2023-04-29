@@ -11,14 +11,13 @@ public class Main {
         do {
             // Stampa del menu principale
             int n = GameInit.startGame();
-
+            //Creazione della partita
+            Game game = new Game();
             //Inizializzazione dei dati relativi alla partita
-            int g, s, c, spe;
-            g = s = c = spe = 0;
-            GameInit.dataInit(n, s, g, c, spe);
+            GameInit.dataInit(n, game);
             Balance balance = new Balance(n);
             //Creazione della partita
-            Game game = new Game(g, spe, n, c, balance);
+
 
             //Creazione dei giocatori con i loro golem, inizialmente senza pietre
             Player player1 = new Player(TamaGolem.createGolemList(n));

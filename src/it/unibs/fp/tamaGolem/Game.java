@@ -1,19 +1,14 @@
 package it.unibs.fp.tamaGolem;
 
 public class Game {
-    private final int golemNum;
-    private final int stonesPerElement;
-    private final int stonesNum;
-    private final int chestDim;
-    private final Balance balance;
+    private int golemNum;
+    private int stonesPerElement;
+    private int stonesNum;
+    private int chestDim;
+    private Balance balance;
+    private StoneChest chest;
+    private Player player1, player2;
 
-    public Game(int golemNum, int stonesPerElement, int stonesNum, int chestDim, Balance balance) {
-        this.golemNum = golemNum;
-        this.stonesPerElement = stonesPerElement;
-        this.stonesNum = stonesNum;
-        this.chestDim = chestDim;
-        this.balance = balance;
-    }
 
     public int getGolemNum() {
         return golemNum;
@@ -33,5 +28,25 @@ public class Game {
 
     public Balance getBalance() {
         return balance;
+    }
+
+    public void setGolemNum(int golemNum) {
+        this.golemNum = golemNum;
+    }
+
+    public void setStonesPerElement(int stonesPerElement) {
+        this.stonesPerElement = stonesPerElement;
+    }
+
+    public void setStonesNum(int stonesNum) {
+        this.stonesNum = stonesNum;
+    }
+
+    public void setChestDim(int chestDim) {
+        this.chestDim = chestDim;
+    }
+
+    public void setBalance(Balance balance) {
+        this.balance = balance;
     }
 }

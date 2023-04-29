@@ -7,7 +7,7 @@ public class Player {
     private List<TamaGolem> golemList = new ArrayList<>();
 
 
-    public Player(ArrayList<TamaGolem> golemList) {
+    public Player(List<TamaGolem> golemList) {
         this.golemList = golemList;
     }
 }

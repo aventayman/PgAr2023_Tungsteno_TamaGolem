@@ -18,8 +18,8 @@ public class TamaGolem {
      * @param n numero di elementi della partita
      * @return una arraylist di TamaGolem
      */
-    public static ArrayList<TamaGolem> createGolemList (int n){
-        ArrayList<TamaGolem> list = new ArrayList<>();
+    public static List<TamaGolem> createGolemList (int n){
+        List<TamaGolem> list = new ArrayList<>();
         for (int i = 0; i < n; i++){
             TamaGolem golem = new TamaGolem();
             list.add(golem);

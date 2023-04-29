@@ -10,4 +10,6 @@ public class StoneChest {
     public StoneChest(List<Stone> stoneList) {
         this.stoneList = stoneList;
     }
+
+
 }
