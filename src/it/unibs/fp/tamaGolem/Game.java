@@ -1,8 +1,11 @@
 package it.unibs.fp.tamaGolem;
 
 public class Game {
-    private int golemNum, stonesPerElement, stonesNum, chestDim;
-    private Balance balance;
+    private final int golemNum;
+    private final int stonesPerElement;
+    private final int stonesNum;
+    private final int chestDim;
+    private final Balance balance;
 
     public Game(int golemNum, int stonesPerElement, int stonesNum, int chestDim, Balance balance) {
         this.golemNum = golemNum;

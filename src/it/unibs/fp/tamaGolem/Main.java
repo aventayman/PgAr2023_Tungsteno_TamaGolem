@@ -3,6 +3,7 @@ package it.unibs.fp.tamaGolem;
 import it.kibo.fp.lib.Menu;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
@@ -23,7 +24,7 @@ public class Main {
             Player player1 = new Player(TamaGolem.createGolemList(n));
             Player player2 = new Player(TamaGolem.createGolemList(n));
 
-            ArrayList<Element> elementChoice = new ArrayList<>();
+            List<Element> elementChoice = new ArrayList<>();
 
             GameInit.stoneElementsChoice(elementChoice, game);
         }while (GameInit.quitGame());

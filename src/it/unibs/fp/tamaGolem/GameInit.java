@@ -1,5 +1,6 @@
 package it.unibs.fp.tamaGolem;
 
+import it.kibo.fp.lib.InputData;
 import it.kibo.fp.lib.Menu;
 
 import java.util.ArrayList;
@@ -158,10 +159,7 @@ public class GameInit {
     /**
      * Metodo che inserisce nella lista fornita gli elementi scelti dal giocatore
      */
-    public static void stoneElementsChoice (ArrayList<Element> golemElements, Game game) {
-
-        Scanner scanner = new Scanner(System.in);
-
+    public static void stoneElementsChoice (List<Element> golemElements, Game game) {
 
         Menu choiceMenu = new Menu("Choose your elements:", availableElements(game.getStonesNum()), true,
                 true, true);
@@ -176,11 +174,8 @@ public class GameInit {
         //un messaggio di errore assieme alla richiesta di reinserimento, fino a quando non viene inserito un
         //intero valido
 
-        //NOTA: MANCANO I CONTROLLI SUL VALORE SCANNERIZZATO (SE è FLOAT, UN CARATTERE E NON UN NUMERO...)
-        while (nextElement > game.getStonesNum()) {
-            System.out.println(INCORRECT_ELEMENT);
-            nextElement = scanner.nextInt();
-        }
+        if (nextElement > game.getStonesNum())
+            nextElement = InputData.readIntegerBetween(INCORRECT_ELEMENT, 0, game.getStonesNum());
 
         //Se il valore inserito è corretto lo converto in un elemento e lo inserisco nella lista golemElements fornita
         golemElements.add(choice(nextElement));
@@ -192,11 +187,9 @@ public class GameInit {
         //Ripete il procedimento d' inserimento effettuando ogni volta i controlli necessari, fino a riempire la lista
         // fornita
         for (int i = 1; i < game.getStonesNum(); i++) {
-            System.out.println(NEXT_ELEMENT);
-            nextElement = scanner.nextInt();
+            nextElement = InputData.readInteger(NEXT_ELEMENT);
             while (valueControl(nextElement, alreadyTaken, game)){
-                System.out.println(INCORRECT_ELEMENT);
-                nextElement = scanner.nextInt();
+                nextElement = InputData.readInteger(INCORRECT_ELEMENT);
             }
             golemElements.add(choice(nextElement));
             alreadyTaken.add(nextElement);
@@ -208,9 +201,7 @@ public class GameInit {
      * @return true se viene inserito Y, false se viene inserito N
      */
     public static boolean quitGame () {
-        System.out.println(EXIT);
-        Scanner sc = new Scanner(System.in);
-        String choice = sc.next();
-        return choice.equalsIgnoreCase("Y");
+        return InputData.readYesOrNo(EXIT);
     }
+
 }

@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="kibofplib-1.0">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib/kibofplib-1.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/kibofplib.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
