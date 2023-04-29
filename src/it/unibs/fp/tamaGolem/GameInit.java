@@ -3,6 +3,7 @@ package it.unibs.fp.tamaGolem;
 import it.kibo.fp.lib.InputData;
 import it.kibo.fp.lib.Menu;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -103,8 +104,16 @@ public class GameInit {
 
     private static void createStoneChest (Game game){
         List<Stone> stoneChest = new ArrayList<>();
-
+        Element [] elements;
+        elements = Element.values();
+        for (int i = 0; i < game.getChestDim(); i++){
+            for (int j = 0; j < game.getStonesPerElement(); j++) {
+                Stone stone = new Stone(elements(i));
+                stoneChest.add(stone);
+            }
+        }
     }
+
     /**
      * Metodo per la scelta di un elemento per lo scontro
      * @param choice numero inserito dall'utente, che corrisponde ad un elemento
