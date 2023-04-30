@@ -25,24 +25,38 @@ public class GameInit {
             "Choose the difficulty of the game: ";
     private static final String EXIT =
             "Do you want to play again? (Y/N) ";
+    private static final ArrayList<String> elements = new ArrayList<>(Arrays.asList(
+            "WATER", "FIRE", "EARTH", "AIR", "ETHER", "PLASMA", "ELECTRO", "ANTIMATTER", "LIGHT", "DARKNESS"
+    ));
+
+
     /**
-     * Metodo che genera il menu iniziale e registra la scelta della difficoltà
-     * @return il numero di elementi che verranno utilizzati nella partita e nella generazione dell'equilibrio
+     * Metodo che genera il menu iniziale, fa scegliere la difficoltà e aggiunge gli elementi alla lista di elementi nel
+     * game, in modo che successivamente si possa lavorare direttamente su quella
      */
-    public static int startGame() {
-        int amount = 0;
+    public static void startGame(Game game) {
+        int elementAmount = 0;
         String [] mode = {"Easy", "Normal", "Hardcore"};
-        Menu modeMenu = new Menu("TamaGolem", mode, true, true, true);
+        Menu modeMenu = new Menu("TamaGolem", mode, false, true, true);
         System.out.println(CHOOSE_DIFFICULTY);
         int choice = modeMenu.choose();
 
         switch (choice) {
-            case 1 -> amount = 3;
-            case 2 -> amount = 6;
-            case 3 -> amount = 9;
+            case 1 -> elementAmount = 4;
+            case 2 -> elementAmount = 7;
+            case 3 -> elementAmount = 10;
         }
 
-        return amount;
+        for (int i = 0; i < elementAmount; i++)
+            game.addElement(elements.get(i));
+
+        game.setStonesNum(GameInit.stonesNum(elementAmount));
+        game.setGolemNum(GameInit.golemNum(elementAmount, game.getStonesNum()));
+        game.setChestDim(GameInit.chestDim(elementAmount, game.getStonesNum(), game.getGolemNum()));
+        game.setStonesPerElement(GameInit.stonesPerElement(game.getChestDim(), elementAmount));
+        game.setPlayer1(new Player(TamaGolem.createGolemList(elementAmount)));
+        game.setPlayer2(new Player(TamaGolem.createGolemList(elementAmount)));
+        createStoneChest(game);
     }
 
     /**
@@ -86,68 +100,19 @@ public class GameInit {
      * @return il numero di pietre per elemento
      */
     private static int stonesPerElement (int chestDim, int amount) {
-        //PROBLEMA: SE IL GIOCATORE SCEGLIE ZERO AVVIENE UNA DIVISIONE PER ZERO QUI
-        //CI DOVREBBE ESSERE LA POSSIBILITA DI USCIRE
         return chestDim/amount;
     }
 
-    /**
-     * Metodo che inizializza i dati inseriti tramite il valore amount fornito
-     * @param amount numero N di elementi della partita
-     * @param game la partita corrente
-     */
-    public static void dataInit (int amount, Game game){
-        game.setStonesNum(GameInit.stonesNum(amount)) ;
-        game.setGolemNum(GameInit.golemNum(amount, game.getStonesNum()));
-        game.setChestDim(GameInit.chestDim(amount, game.getStonesNum(), game.getGolemNum()));
-        game.setStonesPerElement(GameInit.stonesPerElement(game.getChestDim(), amount));
-    }
-
     private static void createStoneChest (Game game){
-        List<Stone> stoneChest = new ArrayList<>();
-        Element [] elements;
-        elements = Element.values();
-        for (int i = 0; i < game.getChestDim(); i++){
+        List<List<Stone>> chest = new ArrayList<>();
+        for (int i = 0; i < game.getElements().size(); i++) {
+            chest.add(i, new ArrayList<>());
             for (int j = 0; j < game.getStonesPerElement(); j++) {
-                Stone stone = new Stone(elements[i]);
-                stoneChest.add(stone);
+                chest.get(i).add(new Stone(game.getElements().get(i)));
             }
         }
-    }
 
-    /**
-     * Metodo per la scelta di un elemento per lo scontro
-     * @param choice numero inserito dall'utente, che corrisponde ad un elemento
-     * @return l'elemento sottoforma di string
-     */
-    private static Element choice (int choice) {
-        Element element;
-        switch(choice){
-            case 1 -> element = Element.WATER;
-            case 2 -> element = Element.AIR;
-            case 3 -> element = Element.FIRE;
-            case 4 -> element = Element.EARTH;
-            case 5 -> element = Element.ETHER;
-            case 6 -> element = Element.ELECTRO;
-            case 7 -> element = Element.PLASMA;
-            case 8 -> element = Element.ANTIMATTER;
-            case 9 -> element = Element.LIGHT;
-            case 10 -> element = Element.DARKNESS;
-            default -> element = Element.ERROR;
-        }
-        return element;
-    }
-
-    /** Metodo di creazione della lista di elementi disponibili
-     * @param n numero N di elementi della partita
-     * @return gli elementi disponibili per la partita corrente
-     */
-    private static String[] availableElements (int n) {
-        String [] elements = new String[n];
-        for (int i = 0; i < n; i++){
-            elements[i] = Arrays.asList(Element.values()).get(i).toString();
-        }
-        return elements;
+        game.setChest(chest);
     }
 
     /**
@@ -176,44 +141,7 @@ public class GameInit {
     /**
      * Metodo che inserisce nella lista fornita gli elementi scelti dal giocatore
      */
-    public static void stoneElementsChoice (List<Element> golemElements, Game game) {
-
-        Menu choiceMenu = new Menu("Choose your elements:", availableElements(game.getStonesNum()), true,
-                true, true);
-
-        //Stampa inizialmente il menu di scelta degli elementi, disponibili in numero pari ad n
-
-        //Dichiara nextElement, variabile che serve a memorizzare il carattere inserito dal giocatore,
-        //al fine di memorizzare la sua scelta
-
-        //QUESTA COSA NON HA ALCUN SENSO VA CAMBIATA DEL TUTTO, ANCHE PERCHE ACCETTA INDICI CHE
-        //NON DOVREBBERO ESSERE ACCETTATI, E DOBBIAMO CAMBIARE L'ENUM
-        int element = choiceMenu.choose();
-        golemElements.add(choice(element));
-
-        //Se il valore inserito è maggiore di n, esso non corrisponderà ad alcun elemento, perciò viene visualizzato
-        //un messaggio di errore assieme alla richiesta di reinserimento, fino a quando non viene inserito un
-        //intero valido
-        element = InputData.readIntegerBetween(CHOOSE_ELEMENT, 0, game.getStonesNum());
-
-        //Se il valore inserito è corretto lo converto in un elemento e lo inserisco nella lista golemElements fornita
-        golemElements.add(choice(element));
-        List<Integer> alreadyTaken = new ArrayList<>();
-
-        //Lista necessaria per tenere traccia degli elementi già pesca
-        alreadyTaken.add(element);
-
-        //Ripete il procedimento d' inserimento effettuando ogni volta i controlli necessari, fino a riempire la lista
-        // fornita
-        for (int i = 1; i < game.getStonesNum(); i++) {
-            element = InputData.readInteger(NEXT_ELEMENT);
-            while (valueControl(element, alreadyTaken, game)){
-                element = InputData.readInteger(INCORRECT_ELEMENT);
-            }
-            golemElements.add(choice(element));
-            alreadyTaken.add(element);
-        }
-    }
+    public static void stoneElementsChoice (Game game) {}
 
     /**
      * Metodo di uscita dal gioco

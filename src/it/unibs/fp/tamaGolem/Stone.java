@@ -1,10 +1,16 @@
 package it.unibs.fp.tamaGolem;
 
 public class Stone {
-    private Element element;
+    private String elementType;
 
-    public Stone(Element element) {
-        this.element = element;
+    public Stone(String elementType) {
+        this.elementType = elementType;
     }
 
+    @Override
+    public String toString() {
+        return "Stone{" +
+                "elementType='" + elementType + '\'' +
+                '}';
+    }
 }
