@@ -3,15 +3,35 @@ package it.unibs.fp.tamaGolem;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * Classe che memorizza i dati del game corrente, in modo da poter essere richiamati al momento opportuno
+ */
 public class Game {
+
+    //Golem per giocatore
     private int golemNum;
+
+    //Numero di pietre di ciascun elemento nella chest
     private int stonesPerElement;
-    private int stonesNum;
+
+    //Numero di pietre per golem nel game corrente
+    private int stonesPerGolem;
+
+    //Dimensione della chest comune
     private int chestDim;
+
+    //Equilibrio della partita corrente
     private Balance balance;
+
+    //Elementi che saranno disponibili per la partita corrente
     private List<String> elements = new ArrayList<>();
+
+    //Chest da cui attingere in game
     private List<List<Stone>> chest = new ArrayList<>();
     private Player player1, player2;
+
+    //Getter e setter
 
     public int getGolemNum() {
         return golemNum;
@@ -21,8 +41,8 @@ public class Game {
         return stonesPerElement;
     }
 
-    public int getStonesNum() {
-        return stonesNum;
+    public int getStonesPerGolem() {
+        return stonesPerGolem;
     }
 
     public int getChestDim() {
@@ -41,8 +61,8 @@ public class Game {
         this.stonesPerElement = stonesPerElement;
     }
 
-    public void setStonesNum(int stonesNum) {
-        this.stonesNum = stonesNum;
+    public void setStonesPerGolem(int stonesNum) {
+        this.stonesPerGolem = stonesNum;
     }
 
     public void setChestDim(int chestDim) {
@@ -78,7 +98,7 @@ public class Game {
         return "Game{" +
                 "golemNum=" + golemNum +
                 ", stonesPerElement=" + stonesPerElement +
-                ", stonesNum=" + stonesNum +
+                ", stonesNum=" + stonesPerGolem +
                 ", chestDim=" + chestDim +
                 ", balance=" + balance +
                 ", elements=" + elements +

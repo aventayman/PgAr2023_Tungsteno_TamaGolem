@@ -42,17 +42,19 @@ public class GameInit {
         int choice = modeMenu.choose();
 
         switch (choice) {
-            case 1 -> elementAmount = 4;
+            case 1 -> elementAmount = 5;
             case 2 -> elementAmount = 7;
             case 3 -> elementAmount = 10;
         }
 
+        //Aggiunta degli elementi che saranno presenti in partita
         for (int i = 0; i < elementAmount; i++)
             game.addElement(elements.get(i));
 
-        game.setStonesNum(GameInit.stonesNum(elementAmount));
-        game.setGolemNum(GameInit.golemNum(elementAmount, game.getStonesNum()));
-        game.setChestDim(GameInit.chestDim(elementAmount, game.getStonesNum(), game.getGolemNum()));
+
+        game.setStonesPerGolem(GameInit.stonesPerGolem(elementAmount));
+        game.setGolemNum(GameInit.golemNum(elementAmount, game.getStonesPerGolem()));
+        game.setChestDim(GameInit.chestDim(elementAmount, game.getStonesPerGolem(), game.getGolemNum()));
         game.setStonesPerElement(GameInit.stonesPerElement(game.getChestDim(), elementAmount));
         game.setPlayer1(new Player(TamaGolem.createGolemList(elementAmount)));
         game.setPlayer2(new Player(TamaGolem.createGolemList(elementAmount)));
@@ -65,7 +67,7 @@ public class GameInit {
      * @param amount numero N di elementi della partita
      * @return il numero di pietre per golem per la partita
      */
-    private static int stonesNum (int amount) {
+    private static int stonesPerGolem (int amount) {
         return (int)(Math.ceil((float)(amount+1)/3))+1;
     }
 
@@ -73,23 +75,23 @@ public class GameInit {
      * Metodo che ritorna il numero di golem per giocatore di questa partita
      * Utilizza le formule fornite dal regolamento per calcolare il valore richiesto
      * @param amount numero N di elementi della partita
-     * @param stonesNum il numero di pietre per golem per la partita
+     * @param stonesPerGolem il numero di pietre per golem per la partita
      * @return il numero di golem per la partita
      */
-    private static int golemNum (int amount, int stonesNum) {
-        return (int)Math.ceil(((float)(amount-1)*(amount-2)/2*stonesNum));
+    private static int golemNum (int amount, int stonesPerGolem) {
+        return (int)Math.ceil(((float)(amount-1)*(amount-2)/(2*stonesPerGolem)));
     }
 
     /**
      * Metodo che ritorna il numero di pietre che saranno presenti nella sacca comune
      * Utilizza le formule fornite dal regolamento per calcolare il valore richiesto
      * @param amount numero N di elementi della partita
-     * @param stonesNum il numero di pietre per golem per la partita
+     * @param stonesPerGolem il numero di pietre per golem per la partita
      * @param golemNum il numero di golem per la partita
      * @return il numero di pietre presenti nella sacca comune
      */
-    private static int chestDim (int amount, int stonesNum, int golemNum) {
-        return (int)(Math.ceil((float)(2*golemNum*stonesNum)/amount)) * amount;
+    private static int chestDim (int amount, int stonesPerGolem, int golemNum) {
+        return (int)(Math.ceil((float)(2*golemNum*stonesPerGolem)/amount)) * amount;
     }
 
     /**
@@ -111,7 +113,6 @@ public class GameInit {
                 chest.get(i).add(new Stone(game.getElements().get(i)));
             }
         }
-
         game.setChest(chest);
     }
 
@@ -135,7 +136,7 @@ public class GameInit {
         //Lo stesso vale se è maggiore del numero massimo di elementi disponibili, poichè non corrisponderebbe ad alcun
         //elemento presente
 
-        return value <= game.getStonesNum() && counter <= game.getStonesPerElement();
+        return value <= game.getStonesPerGolem() && counter <= game.getStonesPerElement();
     }
 
     /**
