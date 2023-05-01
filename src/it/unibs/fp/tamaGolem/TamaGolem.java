@@ -30,4 +30,8 @@ public class TamaGolem {
     public void setStoneList(List<Stone> stoneList) {
         this.stoneList = stoneList;
     }
+
+    public List<Stone> getStoneList() {
+        return stoneList;
+    }
 }
