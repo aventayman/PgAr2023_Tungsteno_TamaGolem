@@ -16,7 +16,8 @@ public class Main {
             System.out.print("\033[H\\033[2J");
             TamaGolem golem = new TamaGolem();
             System.out.println(game);
-            Fight.stoneChoice(game, golem);
+            Fight.stoneChoices(game, golem);
+            Fight.stoneChoices(game, golem);
         } while (GameInit.quitGame());
     }
 }
