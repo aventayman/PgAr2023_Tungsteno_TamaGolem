@@ -15,6 +15,7 @@ public class Fight {
             "\nInsert the index of the stone you want to give to your TamaGolem: ";
     private static final String STONES_FINISHED = "\n" + RED_ATTENTION +
             "\nThe chosen stone has ran out.";
+    
     /**
      * Metodo che inserisce nella lista fornita gli elementi scelti dal giocatore
      * @param game in cui ci si trova
@@ -52,12 +53,6 @@ public class Fight {
             Stone stone = new Stone(chosenElement);
             tempList.add(stone);
         }
-
         golem.setStoneList(tempList);
-
-        System.out.println(golem.getStoneList());
     }
-
-
-
 }

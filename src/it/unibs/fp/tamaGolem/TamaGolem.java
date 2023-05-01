@@ -5,7 +5,7 @@ import java.util.List;
 
 public class TamaGolem {
     private List<Stone> stoneList = new ArrayList<>();
-    private final int puntiSalute = 100;
+    private final int puntiSalute = 10;
 
     public TamaGolem() {}
 

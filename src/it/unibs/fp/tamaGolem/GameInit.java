@@ -105,7 +105,7 @@ public class GameInit {
         return chestDim/amount;
     }
 
-    private static void createStoneChest (Game game){
+    private static void createStoneChest (Game game) {
         List<List<Stone>> chest = new ArrayList<>();
         for (int i = 0; i < game.getElements().size(); i++) {
             chest.add(i, new ArrayList<>());
