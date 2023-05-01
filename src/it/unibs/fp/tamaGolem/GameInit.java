@@ -117,34 +117,6 @@ public class GameInit {
     }
 
     /**
-     * Metodo per verificare se il valore inserito è valido per essere assegnato a un elemento
-     * @param value valore da controllare
-     * @param game partita in corso
-     * @param list lista in cui fare il controllo, verificando che non vi sia presente, e quindi che sia stato scelto
-     * @return true se il valore è valido, false altrimenti
-     */
-    private static boolean valueControl (int value, List<Integer> list, Game game){
-        int counter = 0;
-
-        for (int iValue : list){
-            if(iValue == value)
-                counter++;
-        }
-
-        //se il valore scelto è presente più di spe-volte (ovvero il numero massimo di un singolo elemento
-        // nel sacco comune) all'interno della lista di controllo, allora non è valido
-        //Lo stesso vale se è maggiore del numero massimo di elementi disponibili, poichè non corrisponderebbe ad alcun
-        //elemento presente
-
-        return value <= game.getStonesPerGolem() && counter <= game.getStonesPerElement();
-    }
-
-    /**
-     * Metodo che inserisce nella lista fornita gli elementi scelti dal giocatore
-     */
-    public static void stoneElementsChoice (Game game) {}
-
-    /**
      * Metodo di uscita dal gioco
      * @return true se viene inserito Y, false se viene inserito N
      */

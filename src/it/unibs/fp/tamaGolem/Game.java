@@ -93,12 +93,16 @@ public class Game {
         this.chest = chest;
     }
 
+    public List<List<Stone>> getChest() {
+        return chest;
+    }
+
     @Override
     public String toString() {
         return "Game{" +
                 "golemNum=" + golemNum +
                 ", stonesPerElement=" + stonesPerElement +
-                ", stonesNum=" + stonesPerGolem +
+                ", stonesPerGolem=" + stonesPerGolem +
                 ", chestDim=" + chestDim +
                 ", balance=" + balance +
                 ", elements=" + elements +

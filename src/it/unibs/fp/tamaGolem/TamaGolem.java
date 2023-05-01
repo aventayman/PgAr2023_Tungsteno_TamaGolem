@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TamaGolem {
-    private List<Stone> listaPietre = new ArrayList<>();
+    private List<Stone> stoneList = new ArrayList<>();
     private final int puntiSalute = 100;
 
     public TamaGolem() {}
 
-    public TamaGolem(List<Stone> listaPietre) {
-        this.listaPietre = listaPietre;
+    public TamaGolem(List<Stone> stoneList) {
+        this.stoneList = stoneList;
     }
 
     /**
@@ -27,4 +27,7 @@ public class TamaGolem {
         return list;
     }
 
+    public void setStoneList(List<Stone> stoneList) {
+        this.stoneList = stoneList;
+    }
 }
