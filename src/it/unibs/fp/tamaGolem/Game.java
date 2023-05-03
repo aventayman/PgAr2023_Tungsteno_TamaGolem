@@ -8,89 +8,86 @@ import java.util.List;
  * Classe che memorizza i dati del game corrente, in modo da poter essere richiamati al momento opportuno
  */
 public class Game {
-
-    //Golem per giocatore
-    private int golemNum;
-
-    //Numero di pietre di ciascun elemento nella chest
-    private int stonesPerElement;
-
-    //Numero di pietre per golem nel game corrente
-    private int stonesPerGolem;
-
-    //Dimensione della chest comune
-    private int chestDim;
+    private final int elementAmount;
+    private final int maxHp;
 
     //Equilibrio della partita corrente
-    private Balance balance;
+    private final Balance balance;
 
     //Elementi che saranno disponibili per la partita corrente
-    private List<String> elements = new ArrayList<>();
+    private final Element [] elements;
 
     //Chest da cui attingere in game
-    private List<List<Stone>> chest = new ArrayList<>();
+    private List<List<Stone>> chest;
     private Player player1, player2;
 
-    //Getter e setter
-
-    public int getGolemNum() {
-        return golemNum;
+    public Game(int elementAmount, int maxHp) {
+        this.elementAmount = elementAmount;
+        this.maxHp = maxHp;
+        this.elements = setElements(elementAmount);
+        this.chest = createStoneChest();
+        this.player1 = new Player(getGolemNum());
+        this.player2 = new Player(getGolemNum());
+        this.balance = new Balance(elementAmount, maxHp);
     }
 
-    public int getStonesPerElement() {
-        return stonesPerElement;
+    private Element [] setElements(int elementAmount) {
+        var elementArray = new Element[elementAmount];
+        for (int i = 0; i < elementAmount; i++) {
+            elementArray[i] = Element.values()[i];
+        }
+        return elementArray;
     }
 
+    /**
+     * Metodo che ritorna il numero di pietre per golem per questa partita
+     * Utilizza le formule fornite dal regolamento per calcolare il valore richiesto
+     * @return il numero di pietre per golem per la partita
+     */
     public int getStonesPerGolem() {
-        return stonesPerGolem;
+        return (int)(Math.ceil((float)(elementAmount+1)/3))+1;
     }
 
-    public int getChestDim() {
-        return chestDim;
+    /**
+     * Metodo che ritorna il numero di golem per giocatore di questa partita
+     * Utilizza le formule fornite dal regolamento per calcolare il valore richiesto
+     * @return il numero di golem per la partita
+     */
+    private int getGolemNum () {
+        return (int)Math.ceil(((float)(elementAmount-1)*(elementAmount-2)/(2*getStonesPerGolem())));
     }
 
-    public Balance getBalance() {
-        return balance;
+    /**
+     * Metodo che ritorna il numero di pietre che saranno presenti nella sacca comune
+     * Utilizza le formule fornite dal regolamento per calcolare il valore richiesto
+     * @return il numero di pietre presenti nella sacca comune
+     */
+    private int getChestDim() {
+        return (int)(Math.ceil((float)(2*getGolemNum()*getStonesPerGolem())/elementAmount)) * elementAmount;
     }
 
-    public void setGolemNum(int golemNum) {
-        this.golemNum = golemNum;
+    /**
+     * Metodo che fornisce il numero di pietre per ciascun elemento che ci saranno della sacca comune
+     * Utilizza la formula fornita dal regolamento per calcolare il valore richiesto
+     * @return il numero di pietre per elemento
+     */
+    private int getStonesPerElement() {
+        return getChestDim()/elementAmount;
     }
 
-    public void setStonesPerElement(int stonesPerElement) {
-        this.stonesPerElement = stonesPerElement;
+    private List<List<Stone>> createStoneChest() {
+        List<List<Stone>> chest = new ArrayList<>();
+        for (int i = 0; i < elementAmount; i++) {
+            chest.add(i, new ArrayList<>());
+            for (int j = 0; j < getStonesPerElement(); j++) {
+                chest.get(i).add(new Stone(getElements()[i]));
+            }
+        }
+        return chest;
     }
 
-    public void setStonesPerGolem(int stonesNum) {
-        this.stonesPerGolem = stonesNum;
-    }
-
-    public void setChestDim(int chestDim) {
-        this.chestDim = chestDim;
-    }
-
-    public void setBalance(Balance balance) {
-        this.balance = balance;
-    }
-
-    public void addElement(String element) {
-        elements.add(element);
-    }
-
-    public List<String> getElements() {
+    public Element [] getElements() {
         return elements;
-    }
-
-    public void setPlayer1(Player player1) {
-        this.player1 = player1;
-    }
-
-    public void setPlayer2(Player player2) {
-        this.player2 = player2;
-    }
-
-    public void setChest(List<List<Stone>> chest) {
-        this.chest = chest;
     }
 
     public List<List<Stone>> getChest() {
@@ -100,10 +97,6 @@ public class Game {
     @Override
     public String toString() {
         return "Game{" +
-                "golemNum=" + golemNum +
-                ", stonesPerElement=" + stonesPerElement +
-                ", stonesPerGolem=" + stonesPerGolem +
-                ", chestDim=" + chestDim +
                 ", balance=" + balance +
                 ", elements=" + elements +
                 ", chest=" + chest +

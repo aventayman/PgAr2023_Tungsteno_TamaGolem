@@ -29,8 +29,8 @@ public class Fight {
         viewChest.setShowVerticalLines(true);
         viewChest.setHeaders("Index", "Element", "Number of Stones");
         int index = 1;
-        for (String element : game.getElements()) {
-            viewChest.addRow(String.valueOf(index), element,
+        for (Element element : game.getElements()) {
+            viewChest.addRow(String.valueOf(index), element.toString(),
                     String.valueOf(game.getChest().get(index - 1).size()));
             index++;
         }

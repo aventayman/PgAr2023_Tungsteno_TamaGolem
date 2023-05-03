@@ -1,9 +1,9 @@
 package it.unibs.fp.tamaGolem;
 
 public class Stone {
-    private String elementType;
+    private Element elementType;
 
-    public Stone(String elementType) {
+    public Stone(Element elementType) {
         this.elementType = elementType;
     }
 

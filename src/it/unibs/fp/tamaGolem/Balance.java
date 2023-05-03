@@ -7,8 +7,12 @@ import java.util.Arrays;
 public class Balance {
     int [][] balance;
 
-    public static int[][] createBalance(Game game) {
-        final int GRID_SIZE = game.getElements().size();
+    public Balance(int n, int hp) {
+        this.balance = createBalance(n, hp);
+    }
+
+    public int[][] createBalance(int n, int hp) {
+        final int GRID_SIZE = n;
         int [][] matrix = new int[GRID_SIZE][GRID_SIZE];
 
         //Generazione di GRID_SIZE - 1 coppie di indici da inizializzare random
@@ -21,18 +25,21 @@ public class Balance {
                 int column = RandomDraws.drawInteger(0, GRID_SIZE - 1);
                 indexMatrix[i] = new int[] {row, column};
             }
-        } while (!validRandomIndexes(indexMatrix));
+        } while (!validRandomIndexes(indexMatrix, hp));
 
-        for (int i = 0; i < indexMatrix.length; i++) {
-            int randomNumber;
-            do {
-                randomNumber = RandomDraws.drawInteger(-10, 10);
-            } while (randomNumber == 0);
+        do {
+            for (int i = 0; i < indexMatrix.length; i++) {
+                int randomNumber;
+                do {
+                    randomNumber = RandomDraws.drawInteger(-hp, hp);
+                } while (randomNumber == 0);
 
-            matrix[indexMatrix[i][0]][indexMatrix[i][1]] = randomNumber;
-            matrix[indexMatrix[i][1]][indexMatrix[i][0]] = -randomNumber;
-        }
+                matrix[indexMatrix[i][0]][indexMatrix[i][1]] = randomNumber;
+                matrix[indexMatrix[i][1]][indexMatrix[i][0]] = -randomNumber;
+            }
+        } while(!validRandomValues(matrix, hp));
 
+        //Da rimuovere
         for (int i = 0; i < GRID_SIZE; i++) {
             for (int j = 0; j < GRID_SIZE; j++) {
                 System.out.printf("%3d", matrix[i][j]);
@@ -50,7 +57,7 @@ public class Balance {
      * @param indexMatrix la matrice degli indici dove si esegue il controllo
      * @return se gli indici sono validi ritorna true
      */
-    private static boolean validRandomIndexes(int[][] indexMatrix) {
+    private boolean validRandomIndexes(int[][] indexMatrix, int hp) {
 
         for (int[] indexes : indexMatrix) {
             if (indexes[0] == indexes[1])
@@ -92,5 +99,32 @@ public class Balance {
         }
 
         return true;
+    }
+
+    /**
+     * Metodo che controlla che su ogni riga, e di conseguenza colonna, la somma dei valori
+     * già inizializzati non superi gli hp di un TamaGolem.
+     * @param matrix la matrice da controllare
+     * @param hp la vita massima del TamaGolem
+     * @return ritorna true se la matrice è valida
+     */
+    private boolean validRandomValues(int [][] matrix, int hp) {
+        for (int [] row : matrix) {
+            int sum = 0;
+            for (int value : row)
+                sum += value;
+
+            if (sum > hp)
+                return false;
+        }
+        return true;
+    }
+
+    public int[][] getBalance() {
+        return balance;
+    }
+
+    public void setBalance(int[][] balance) {
+        this.balance = balance;
     }
 }
