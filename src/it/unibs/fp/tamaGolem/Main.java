@@ -3,9 +3,8 @@ package it.unibs.fp.tamaGolem;
 public class Main {
     public static void main(String[] args) {
         do {
-            var game = new Game(GameInit.getDifficulty(), 10);
-            TamaGolem golem = new TamaGolem();
-            System.out.println(game);
+            Balance balance = new Balance(4, 10);
         } while (GameInit.quitGame());
     }
+
 }

@@ -2,6 +2,7 @@ package it.unibs.fp.tamaGolem;
 
 import it.kibo.fp.lib.RandomDraws;
 
+import java.awt.*;
 import java.util.Arrays;
 
 public class Balance {
@@ -12,20 +13,25 @@ public class Balance {
     }
 
     public int[][] createBalance(int n, int hp) {
-        final int GRID_SIZE = n;
-        int [][] matrix = new int[GRID_SIZE][GRID_SIZE];
-
-        //Generazione di GRID_SIZE - 1 coppie di indici da inizializzare random
-        int [][] indexMatrix = new int[GRID_SIZE-1][2];
+        //int [][] matrix = new int[n][n];
+    int [][] matrix = {
+            {0, 4, 0, 6},
+            {-4, 0, -2, 0},
+            {0, 2, 0, 0},
+            {-6, 0, 0, 0}
+    };
+        /*
+        //Generazione di n - 1 coppie di indici da inizializzare random
+        int [][] indexMatrix = new int[n-1][2];
 
         do {
-            //Genera GRID_SIZE - 1 coppie di indici e verifica che siano posizioni valide
-            for (int i = 0; i < GRID_SIZE - 1; i++) {
-                int row = RandomDraws.drawInteger(0, GRID_SIZE - 1);
-                int column = RandomDraws.drawInteger(0, GRID_SIZE - 1);
+            //Genera n - 1 coppie di indici e verifica che siano posizioni valide
+            for (int i = 0; i < n - 1; i++) {
+                int row = RandomDraws.drawInteger(0, n - 1);
+                int column = RandomDraws.drawInteger(0, n - 1);
                 indexMatrix[i] = new int[] {row, column};
             }
-        } while (!validRandomIndexes(indexMatrix, hp));
+        } while (!validRandomIndexes(indexMatrix));
 
         do {
             for (int i = 0; i < indexMatrix.length; i++) {
@@ -38,14 +44,17 @@ public class Balance {
                 matrix[indexMatrix[i][1]][indexMatrix[i][0]] = -randomNumber;
             }
         } while(!validRandomValues(matrix, hp));
+*/
+        solveMatrix(matrix);
 
         //Da rimuovere
-        for (int i = 0; i < GRID_SIZE; i++) {
-            for (int j = 0; j < GRID_SIZE; j++) {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
                 System.out.printf("%3d", matrix[i][j]);
             }
             System.out.print("\n");
         }
+
         return matrix;
     }
 
@@ -57,7 +66,7 @@ public class Balance {
      * @param indexMatrix la matrice degli indici dove si esegue il controllo
      * @return se gli indici sono validi ritorna true
      */
-    private boolean validRandomIndexes(int[][] indexMatrix, int hp) {
+    private boolean validRandomIndexes(int[][] indexMatrix) {
 
         for (int[] indexes : indexMatrix) {
             if (indexes[0] == indexes[1])
@@ -67,7 +76,7 @@ public class Balance {
         for (int i = 0; i < indexMatrix.length - 1; i++) {
             for (int j = i + 1; j < indexMatrix.length; j++) {
                 //Controllo che le due posizioni non siano uguali
-                if (indexMatrix[i] == indexMatrix[j])
+                if (indexMatrix[i][0] == indexMatrix[j][0] && indexMatrix[i][1] == indexMatrix[j][1])
                     return false;
                 //Controllo che le due posizioni non siano simmetriche
                 if (indexMatrix[i][0] == indexMatrix[j][1] && indexMatrix[i][1] == indexMatrix[j][0])
@@ -109,12 +118,13 @@ public class Balance {
      * @return ritorna true se la matrice è valida
      */
     private boolean validRandomValues(int [][] matrix, int hp) {
+        int n = matrix.length;
         for (int [] row : matrix) {
             int sum = 0;
             for (int value : row)
                 sum += value;
 
-            if (sum > hp)
+            if (sum < -hp * (n - 1) / 2 || sum > hp * (n - 1) / 2)
                 return false;
         }
         return true;
@@ -126,5 +136,55 @@ public class Balance {
 
     public void setBalance(int[][] balance) {
         this.balance = balance;
+    }
+
+    private boolean solveMatrix(int [][] matrix) {
+        int n = matrix.length;
+        for (int row = 0; row < n; row++) {
+            for (int column = 0; column < n; column++) {
+                if (row != column && matrix[row][column] == 0) {
+                    for (int numberToTry = -20; numberToTry <= 20; numberToTry++) {
+                        if (numberToTry != 0) {
+                            matrix[row][column] = numberToTry;
+                            matrix[column][row] = -numberToTry;
+
+                            if (isFullRow(matrix, row)) {
+                                if (isValidRow(matrix, row)) {
+                                    if (solveMatrix(matrix))
+                                        return true;
+                                }
+                                else {
+                                    matrix[row][column] = 0;
+                                    matrix[column][row] = 0;
+                                }
+                            }
+                            else {
+                                solveMatrix(matrix);
+                            }
+                        }
+                    }
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private boolean isFullRow(int [][] matrix, int row) {
+        int zeroCounter = 0;
+        for (int element : matrix[row]) {
+            if (element == 0)
+                zeroCounter++;
+        }
+
+        return zeroCounter < 2;
+    }
+
+    private boolean isValidRow(int [][] matrix, int row) {
+        int sum = 0;
+        for (int number : matrix[row])
+            sum += number;
+
+        return sum == 0;
     }
 }

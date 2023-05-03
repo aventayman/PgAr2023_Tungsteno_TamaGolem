@@ -21,6 +21,7 @@ public class Fight {
      * @param game in cui ci si trova
      * @param golem a gui aggiungere la pietra scelta
      */
+    /*
     public static void stoneChoices (Game game, TamaGolem golem) {
         List<Stone> tempList = new ArrayList<>();
 
@@ -55,4 +56,6 @@ public class Fight {
         }
         golem.setStoneList(tempList);
     }
+
+     */
 }
