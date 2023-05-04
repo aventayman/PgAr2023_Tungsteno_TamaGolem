@@ -13,44 +13,47 @@ public class Balance {
     }
 
     public int[][] createBalance(int n, int hp) {
-        //int [][] matrix = new int[n][n];
-    int [][] matrix = {
-            {0, 4, 0, 6},
-            {-4, 0, -2, 0},
-            {0, 2, 0, 0},
-            {-6, 0, 0, 0}
-    };
         /*
+        int [][] matrix = {
+                {0, 0, 0, -8},
+                {0, 0, -6, 4},
+                {0, 6, 0, 0},
+                {8, -4, 0, 0}
+        };
+        */
+        int [][] matrix;
         //Generazione di n - 1 coppie di indici da inizializzare random
-        int [][] indexMatrix = new int[n-1][2];
+        int [][] indexMatrix = new int[n - 1][2];
 
         do {
-            //Genera n - 1 coppie di indici e verifica che siano posizioni valide
-            for (int i = 0; i < n - 1; i++) {
-                int row = RandomDraws.drawInteger(0, n - 1);
-                int column = RandomDraws.drawInteger(0, n - 1);
-                indexMatrix[i] = new int[] {row, column};
-            }
-        } while (!validRandomIndexes(indexMatrix));
+            matrix = new int[n][n];
+            do {
+                //Genera n - 1 coppie di indici e verifica che siano posizioni valide
+                for (int i = 0; i < n - 1; i++) {
+                    int row = RandomDraws.drawInteger(0, n - 1);
+                    int column = RandomDraws.drawInteger(0, n - 1);
+                    indexMatrix[i] = new int[]{row, column};
+                }
+            } while (!validRandomIndexes(indexMatrix));
 
-        do {
-            for (int i = 0; i < indexMatrix.length; i++) {
-                int randomNumber;
-                do {
-                    randomNumber = RandomDraws.drawInteger(-hp, hp);
-                } while (randomNumber == 0);
+            do {
+                for (int i = 0; i < indexMatrix.length; i++) {
+                    int randomNumber;
+                    do {
+                        randomNumber = RandomDraws.drawInteger(-hp, hp);
+                    } while (randomNumber == 0);
 
-                matrix[indexMatrix[i][0]][indexMatrix[i][1]] = randomNumber;
-                matrix[indexMatrix[i][1]][indexMatrix[i][0]] = -randomNumber;
-            }
-        } while(!validRandomValues(matrix, hp));
-*/
-        solveMatrix(matrix);
+                    matrix[indexMatrix[i][0]][indexMatrix[i][1]] = randomNumber;
+                    matrix[indexMatrix[i][1]][indexMatrix[i][0]] = -randomNumber;
+                }
+            } while (!validRandomValues(matrix, hp));
+        } while(!solveMatrix(matrix, hp));
+
 
         //Da rimuovere
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                System.out.printf("%3d", matrix[i][j]);
+                System.out.printf("%6d", matrix[i][j]);
             }
             System.out.print("\n");
         }
@@ -120,11 +123,15 @@ public class Balance {
     private boolean validRandomValues(int [][] matrix, int hp) {
         int n = matrix.length;
         for (int [] row : matrix) {
+            boolean flag = false;
             int sum = 0;
-            for (int value : row)
+            for (int value : row) {
                 sum += value;
+                if (value != 0)
+                    flag = true;
+            }
 
-            if (sum < -hp * (n - 1) / 2 || sum > hp * (n - 1) / 2)
+            if (sum < -hp * (n - 1) / 2 || sum > hp * (n - 1) / 2 || (sum == 0 && flag))
                 return false;
         }
         return true;
@@ -138,34 +145,69 @@ public class Balance {
         this.balance = balance;
     }
 
-    private boolean solveMatrix(int [][] matrix) {
+    private boolean solveMatrix(int [][] matrix, int hp) {
         int n = matrix.length;
         for (int row = 0; row < n; row++) {
             for (int column = 0; column < n; column++) {
                 if (row != column && matrix[row][column] == 0) {
-                    for (int numberToTry = -20; numberToTry <= 20; numberToTry++) {
+                    for (int numberToTry = -hp; numberToTry <= hp; numberToTry++) {
+                        numberToTry = RandomDraws.drawInteger(-hp, hp);
                         if (numberToTry != 0) {
                             matrix[row][column] = numberToTry;
                             matrix[column][row] = -numberToTry;
 
+                            //Se la riga è piena
                             if (isFullRow(matrix, row)) {
+                                //Se tutta la matrice è già valida ritorna direttamente true
+                                if (validMatrix(matrix)) {
+                                    return true;
+                                }
+                                //Se la riga è valida
                                 if (isValidRow(matrix, row)) {
-                                    if (solveMatrix(matrix))
+                                    //
+                                    if (solveMatrix(matrix, hp)) {
                                         return true;
+                                    }
+                                    else {
+                                        matrix[row][column] = 0;
+                                        matrix[column][row] = 0;
+                                        return false;
+                                    }
                                 }
                                 else {
                                     matrix[row][column] = 0;
                                     matrix[column][row] = 0;
                                 }
                             }
+                            //Altrimenti passa al numero successivo nella riga
                             else {
-                                solveMatrix(matrix);
+                                //Richiama nuovamente il metodo con la matrice già leggermente completa
+                                if (solveMatrix(matrix, hp))
+                                    return true;
                             }
                         }
                     }
                     return false;
                 }
             }
+        }
+        return validMatrix(matrix);
+    }
+
+    private boolean validMatrix(int [][] matrix) {
+        int rowAdder = 0;
+        int zeroCounter = 0;
+        for (int [] row : matrix) {
+            for (int number : row) {
+                rowAdder += number;
+                if (number == 0)
+                    zeroCounter++;
+            }
+            if (rowAdder != 0 || zeroCounter > 1)
+                return false;
+
+            zeroCounter = 0;
+            rowAdder = 0;
         }
         return true;
     }
