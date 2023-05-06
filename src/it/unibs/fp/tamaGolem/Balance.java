@@ -1,9 +1,6 @@
 package it.unibs.fp.tamaGolem;
 
-import it.kibo.fp.lib.RandomDraws;
-
-import java.awt.*;
-import java.util.Arrays;
+import it.ayman.fp.lib.RandomDraws;
 
 public class Balance {
     int [][] balance;
@@ -13,23 +10,15 @@ public class Balance {
     }
 
     public int[][] createBalance(int n, int hp) {
-        /*
-        int [][] matrix = {
-                {0, 0, 0, -8},
-                {0, 0, -6, 4},
-                {0, 6, 0, 0},
-                {8, -4, 0, 0}
-        };
-        */
         int [][] matrix;
         //Generazione di n - 1 coppie di indici da inizializzare random
-        int [][] indexMatrix = new int[n - 1][2];
+        int [][] indexMatrix = new int[n][2];
 
         do {
             matrix = new int[n][n];
             do {
                 //Genera n - 1 coppie di indici e verifica che siano posizioni valide
-                for (int i = 0; i < n - 1; i++) {
+                for (int i = 0; i < n; i++) {
                     int row = RandomDraws.drawInteger(0, n - 1);
                     int column = RandomDraws.drawInteger(0, n - 1);
                     indexMatrix[i] = new int[]{row, column};
@@ -37,26 +26,19 @@ public class Balance {
             } while (!validRandomIndexes(indexMatrix));
 
             do {
-                for (int i = 0; i < indexMatrix.length; i++) {
+                for (int[] index : indexMatrix) {
                     int randomNumber;
                     do {
                         randomNumber = RandomDraws.drawInteger(-hp, hp);
                     } while (randomNumber == 0);
 
-                    matrix[indexMatrix[i][0]][indexMatrix[i][1]] = randomNumber;
-                    matrix[indexMatrix[i][1]][indexMatrix[i][0]] = -randomNumber;
+                    matrix[index[0]][index[1]] = randomNumber;
+                    matrix[index[1]][index[0]] = -randomNumber;
                 }
             } while (!validRandomValues(matrix, hp));
         } while(!solveMatrix(matrix, hp));
 
 
-        //Da rimuovere
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                System.out.printf("%6d", matrix[i][j]);
-            }
-            System.out.print("\n");
-        }
 
         return matrix;
     }
@@ -207,7 +189,6 @@ public class Balance {
                 return false;
 
             zeroCounter = 0;
-            rowAdder = 0;
         }
         return true;
     }
@@ -228,5 +209,16 @@ public class Balance {
             sum += number;
 
         return sum == 0;
+    }
+
+    public void printBalance() {
+        int GRID_SIZE = balance.length;
+        //Da rimuovere
+        for (int[] row : balance) {
+            for (int j = 0; j < GRID_SIZE; j++) {
+                System.out.printf("%6d", row[j]);
+            }
+            System.out.print("\n");
+        }
     }
 }

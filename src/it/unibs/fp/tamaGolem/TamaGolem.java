@@ -5,12 +5,11 @@ import java.util.List;
 
 public class TamaGolem {
     private List<Stone> stoneList = new ArrayList<>();
-    private final int puntiSalute = 10;
+    private final int hp;
 
-    public TamaGolem() {}
-
-    public TamaGolem(List<Stone> stoneList) {
+    public TamaGolem(List<Stone> stoneList, int hp) {
         this.stoneList = stoneList;
+        this.hp = hp;
     }
 
     public void setStoneList(List<Stone> stoneList) {

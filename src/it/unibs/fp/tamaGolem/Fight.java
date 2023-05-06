@@ -1,27 +1,27 @@
 package it.unibs.fp.tamaGolem;
 
-import it.kibo.fp.lib.AnsiColors;
-import it.kibo.fp.lib.InputData;
-import it.kibo.fp.lib.PrettyStrings;
+import it.ayman.fp.lib.AnsiColors;
+import it.ayman.fp.lib.InputData;
+import it.ayman.fp.lib.PrettyStrings;
+import it.ayman.fp.lib.CommandLineTable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Fight {
-    private static final String RED_ATTENTION = AnsiColors.RED + "Attention!" + AnsiColors.RESET;
-    private static final String SELECT_STONE =
-            "\nSelect the stones you want to give to the TamaGolem from the chest: ";
-    private static final String STONE_CHOICE =
-            "\nInsert the index of the stone you want to give to your TamaGolem: ";
-    private static final String STONES_FINISHED = "\n" + RED_ATTENTION +
-            "\nThe chosen stone has ran out.";
+    private static final String RED_ATTENTION = PrettyStrings.colorString("Attention!", AnsiColors.RED);
+    private static final String COMMAND_SIGN = "> ";
+    private static final String SELECT_STONE = COMMAND_SIGN +
+                    "Select the stones you want to give to the TamaGolem from the chest:";
+    private static final String STONE_CHOICE = "Insert the index of the stone you want to give to your TamaGolem:";
+    private static final String STONES_FINISHED = COMMAND_SIGN + RED_ATTENTION + "\n" +
+            COMMAND_SIGN + "The chosen stone has ran out.";
     
     /**
      * Metodo che inserisce nella lista fornita gli elementi scelti dal giocatore
      * @param game in cui ci si trova
      * @param golem a gui aggiungere la pietra scelta
      */
-    /*
     public static void stoneChoices (Game game, TamaGolem golem) {
         List<Stone> tempList = new ArrayList<>();
 
@@ -37,12 +37,13 @@ public class Fight {
         }
         viewChest.print();
 
-        boolean validIndex = true;
-        String chosenElement;
+        boolean validIndex;
+        Element chosenElement;
         for (int i = 0; i < game.getStonesPerGolem(); i++) {
             do {
-                int choice = InputData.readIntegerBetween(STONE_CHOICE, 1, game.getElements().size()) - 1;
-                chosenElement = game.getElements().get(choice);
+                validIndex = true;
+                int choice = InputData.readIntegerBetween(STONE_CHOICE, 1, game.getElements().length) - 1;
+                chosenElement = game.getElements()[choice];
                 try {
                     game.getChest().get(choice).remove(0);
                 } catch (IndexOutOfBoundsException exception) {
@@ -57,5 +58,4 @@ public class Fight {
         golem.setStoneList(tempList);
     }
 
-     */
 }

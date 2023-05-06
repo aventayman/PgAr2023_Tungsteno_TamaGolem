@@ -6,8 +6,8 @@ import java.util.List;
 public class Player {
     private List<TamaGolem> golemList = new ArrayList<>();
 
-    public Player(int golemAmount) {
-        this.golemList = createGolemList(golemAmount);
+    public Player(int golemAmount, int golemHp) {
+        this.golemList = createGolemList(golemAmount, golemHp);
     }
 
     /**
@@ -15,10 +15,10 @@ public class Player {
      * @param golemAmount numero di TamaGolem della partita
      * @return una arraylist di TamaGolem
      */
-    private static List<TamaGolem> createGolemList (int golemAmount){
+    private static List<TamaGolem> createGolemList (int golemAmount, int golemHp){
         List<TamaGolem> list = new ArrayList<>();
         for (int i = 0; i < golemAmount; i++){
-            TamaGolem golem = new TamaGolem();
+            TamaGolem golem = new TamaGolem(new ArrayList<>(), golemHp);
             list.add(golem);
         }
         return list;

@@ -1,6 +1,7 @@
 package it.unibs.fp.tamaGolem;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -18,16 +19,17 @@ public class Game {
     private final Element [] elements;
 
     //Chest da cui attingere in game
-    private List<List<Stone>> chest;
-    private Player player1, player2;
+    private final List<List<Stone>> chest;
+    private final Player player1;
+    private final Player player2;
 
     public Game(int elementAmount, int maxHp) {
         this.elementAmount = elementAmount;
         this.maxHp = maxHp;
         this.elements = setElements(elementAmount);
         this.chest = createStoneChest();
-        this.player1 = new Player(getGolemNum());
-        this.player2 = new Player(getGolemNum());
+        this.player1 = new Player(getGolemNum(), maxHp);
+        this.player2 = new Player(getGolemNum(), maxHp);
         this.balance = new Balance(elementAmount, maxHp);
     }
 
@@ -98,7 +100,7 @@ public class Game {
     public String toString() {
         return "Game{" +
                 ", balance=" + balance +
-                ", elements=" + elements +
+                ", elements=" + Arrays.toString(elements) +
                 ", chest=" + chest +
                 ", player1=" + player1 +
                 ", player2=" + player2 +
