@@ -19,7 +19,7 @@ public class Game {
     private final Element [] elements;
 
     //Chest da cui attingere in game
-    private final List<List<Stone>> chest;
+    private final List<List<Element>> chest;
     private final Player player1;
     private final Player player2;
 
@@ -33,6 +33,18 @@ public class Game {
         this.balance = new Balance(elementAmount, maxHp);
     }
 
+    public int evaluateDamage (Element element1, Element element2) {
+        int firstIndex = 0;
+        int secondIndex = 0;
+        for (int i = 0; i < elements.length; i++) {
+            if(elements[i].equals(element1))
+                firstIndex = i;
+            if(elements[i].equals(element2))
+                secondIndex = i;
+        }
+        return balance.getBalance()[firstIndex][secondIndex];
+    }
+
     private Element [] setElements(int elementAmount) {
         var elementArray = new Element[elementAmount];
         for (int i = 0; i < elementAmount; i++) {
@@ -40,6 +52,7 @@ public class Game {
         }
         return elementArray;
     }
+
 
     /**
      * Metodo che ritorna il numero di pietre per golem per questa partita
@@ -77,23 +90,35 @@ public class Game {
         return getChestDim()/elementAmount;
     }
 
-    private List<List<Stone>> createStoneChest() {
-        List<List<Stone>> chest = new ArrayList<>();
+    private List<List<Element>> createStoneChest() {
+        List<List<Element>> chest = new ArrayList<>();
         for (int i = 0; i < elementAmount; i++) {
             chest.add(i, new ArrayList<>());
-            for (int j = 0; j < getStonesPerElement(); j++) {
-                chest.get(i).add(new Stone(getElements()[i]));
-            }
+            for (int j = 0; j < getStonesPerElement(); j++)
+                chest.get(i).add(getElements()[i]);
         }
         return chest;
     }
+
 
     public Element [] getElements() {
         return elements;
     }
 
-    public List<List<Stone>> getChest() {
+    public List<List<Element>> getChest() {
         return chest;
+    }
+
+    public Player getPlayer1() {
+        return player1;
+    }
+
+    public Player getPlayer2() {
+        return player2;
+    }
+
+    public Balance getBalance() {
+        return balance;
     }
 
     @Override

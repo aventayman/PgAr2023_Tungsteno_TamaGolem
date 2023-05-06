@@ -39,6 +39,6 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="aymanfplib" level="project" />
+    <orderEntry type="library" exported="" name="aymanfplib" level="project" />
   </component>
 </module>

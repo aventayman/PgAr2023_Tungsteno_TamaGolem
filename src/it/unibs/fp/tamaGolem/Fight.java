@@ -23,7 +23,7 @@ public class Fight {
      * @param golem a gui aggiungere la pietra scelta
      */
     public static void stoneChoices (Game game, TamaGolem golem) {
-        List<Stone> tempList = new ArrayList<>();
+        List<Element> tempList = new ArrayList<>();
 
         System.out.println(SELECT_STONE);
         CommandLineTable viewChest = new CommandLineTable();
@@ -52,10 +52,81 @@ public class Fight {
                 }
             } while (!validIndex);
 
-            Stone stone = new Stone(chosenElement);
-            tempList.add(stone);
+            tempList.add(chosenElement);
         }
         golem.setStoneList(tempList);
     }
 
+    /**
+     * Metodo che gestisce un ciclo di un fight
+     * Per ciclo si intende una fase che inizia con il primo lancio di due pietre fra due golem e
+     * finisce con la morte di uno di essi
+     * @param golem1 primo golem combattente
+     * @param golem2 secondo golem combattente
+     * @param game il game in cui ci si trova durante questo ciclo
+     * @return  1 -> golem1 è sconfitto
+     *          2 -> golem2 è sconfitto
+     */
+    private static int fightCycle (TamaGolem golem1, TamaGolem golem2, Game game) {
+        //Inizializza gli hp dei golem
+        int hp1, hp2;
+        hp1 = hp2 = golem1.getHp();
+
+        int elementIndex = 0;
+        //Ciclo while che si ripete fino a quando uno dei due golem non termina gli hp
+        while (hp1 > 0 && hp2 > 0){
+            //Variabile di supporto che varierà da 0 al numero massimo di pietre per golem -1
+            //Serve per reiterare al'interno della lista di pietre di un golem, ripetendo i lanci ciclicamente
+            elementIndex = elementIndex % game.getStonesPerGolem();
+
+            int damageDealt = game.evaluateDamage(golem1.getStoneList().get(elementIndex),
+                    golem2.getStoneList().get(elementIndex));
+
+            //Se il damageDealt è positivo, vuol dire che golem1 infligge danni, in caso contrario li riceve
+            if(damageDealt > 0)
+                hp2 -= damageDealt;
+            else
+                hp1 += damageDealt;
+
+            elementIndex++;
+        }
+
+        if(hp1 <= 0)
+            return 1;
+        else
+            return 2;
+    }
+
+    /**
+     * Metodo che gestisce lo scontro fra due giocatori. Ad ogni ciclo, chiede al giocatore di scegliere le pietre dalla
+     * chest, le inserisce nei golem e inizia lo scontro fra i due
+     * @param game il game in cui avviene lo scontro
+     */
+    public static void startMatch (Game game) {
+        //Indici per posizionarsi sul golem corrente
+        int currentGolem1, currentGolem2;
+        currentGolem1 = currentGolem2 = 0;
+
+        int golemNumber = game.getPlayer1().getGolemList().size();
+        while(currentGolem1 < golemNumber && currentGolem2 < golemNumber){
+            //Scelta delle pietre, prima del player1 e poi del player2
+            Fight.stoneChoices(game, game.getPlayer1().getGolemList().get(currentGolem1));
+            Fight.stoneChoices(game, game.getPlayer2().getGolemList().get(currentGolem2));
+
+            int defeated = fightCycle(game.getPlayer1().getGolemList().get(currentGolem1),
+                            game.getPlayer2().getGolemList().get(currentGolem2), game);
+
+            //Se il golem sconfitto è quello del primo giocatore, il currentGolem1 dovrà aumentare, e viceversa
+            if(defeated == 1)
+                currentGolem1++;
+            else
+                currentGolem2++;
+        }
+        if (currentGolem1 == golemNumber)
+            System.out.println("Il player2 ha vinto");
+        else
+            System.out.println("Il player1 ha vinto");
+    }
 }
+
+

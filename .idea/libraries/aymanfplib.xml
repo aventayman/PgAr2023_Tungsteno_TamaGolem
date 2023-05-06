@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="aymanfplib">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib/KiboUniBSFpLib/target/artifacts/aymanfplib/aymanfplib.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/aymanfplib.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

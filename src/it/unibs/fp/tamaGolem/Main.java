@@ -12,8 +12,13 @@ public class Main {
             System.out.println(Title.createTitle(title, true));
             int difficulty = GameInit.getDifficulty();
             var game = new Game(difficulty, 10);
+            /*
             Fight.stoneChoices(game, new TamaGolem(new ArrayList<>(), 10));
             Fight.stoneChoices(game, new TamaGolem(new ArrayList<>(), 10));
+             */
+
+            Fight.startMatch(game);
+            game.getBalance().printBalance();
         } while (GameInit.quitGame());
     }
 

@@ -23,4 +23,8 @@ public class Player {
         }
         return list;
     }
+
+    public List<TamaGolem> getGolemList() {
+        return golemList;
+    }
 }
