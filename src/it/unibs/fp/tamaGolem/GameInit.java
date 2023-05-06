@@ -2,6 +2,7 @@ package it.unibs.fp.tamaGolem;
 
 import it.ayman.fp.lib.InputData;
 import it.ayman.fp.lib.Menu;
+import it.ayman.fp.lib.Title;
 
 /**
  * Classe che genera i menu d'inizializzazione della partita, con i relativi dati che andranno a influenzare
@@ -16,12 +17,14 @@ public class GameInit {
     private static final String THANK_YOU = "> Thank you for your choice, the game will begin shortly";
     private static final String PLAY_AGAIN =
             "Do you want to play again?";
+    private static final String title = "TamaGolem";
 
     /**
      * Metodo che genera il menu iniziale, fa scegliere la difficoltà e aggiunge gli elementi alla lista di elementi nel
      * game, in modo che successivamente si possa lavorare direttamente su quella
      */
     public static int getDifficulty() throws InterruptedException {
+        System.out.println(Title.createTitle(title, true));
         int elementAmount = 0;
         String [] mode = {EASY, MEDIUM, HARD};
         Menu modeMenu = new Menu(CHOOSE_DIFFICULTY, mode);

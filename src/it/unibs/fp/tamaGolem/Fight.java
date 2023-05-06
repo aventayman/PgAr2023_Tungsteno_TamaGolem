@@ -75,7 +75,7 @@ public class Fight {
         int elementIndex = 0;
         //Ciclo while che si ripete fino a quando uno dei due golem non termina gli hp
         while (hp1 > 0 && hp2 > 0){
-            //Variabile di supporto che varierà da 0 al numero massimo di pietre per golem -1
+            //Variabile di supporto che varierà da zero al numero massimo di pietre per golem -1
             //Serve per reiterare al'interno della lista di pietre di un golem, ripetendo i lanci ciclicamente
             elementIndex = elementIndex % game.getStonesPerGolem();
 
@@ -98,7 +98,7 @@ public class Fight {
     }
 
     /**
-     * Metodo che gestisce lo scontro fra due giocatori. Ad ogni ciclo, chiede al giocatore di scegliere le pietre dalla
+     * Metodo che gestisce lo scontro fra due giocatori. A ogni ciclo, chiede al giocatore di scegliere le pietre dalla
      * chest, le inserisce nei golem e inizia lo scontro fra i due
      * @param game il game in cui avviene lo scontro
      */
@@ -123,9 +123,9 @@ public class Fight {
                 currentGolem2++;
         }
         if (currentGolem1 == golemNumber)
-            System.out.println("Il player2 ha vinto");
+            System.out.println("Player n.2 won! Amazing!");
         else
-            System.out.println("Il player1 ha vinto");
+            System.out.println("Player n.1 won! What a fight!");
     }
 }
 

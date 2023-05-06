@@ -33,6 +33,14 @@ public class Game {
         this.balance = new Balance(elementAmount, maxHp);
     }
 
+    /**
+     * Metodo per calcolare i danni in base all'equilibrio generato
+     * @param element1 il primo elemento del confronto
+     * @param element2 il secondo elemento del confronto
+     * @return il danno corrispondente alla casella balance[element1][element2]
+     * Se il danno è positivo, allora element1 è efficace contro element2
+     * Se il danno è negativo, allora element2 è efficace contro element1
+     */
     public int evaluateDamage (Element element1, Element element2) {
         int firstIndex = 0;
         int secondIndex = 0;
