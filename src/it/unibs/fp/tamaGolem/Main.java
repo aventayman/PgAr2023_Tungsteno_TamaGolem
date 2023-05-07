@@ -3,13 +3,15 @@ package it.unibs.fp.tamaGolem;
 public class Main {
 
     public static void main(String[] args) throws InterruptedException {
+        GameInit.printTitle();
         do {
-            int difficulty = GameInit.getDifficulty();
 
-            int golemMaxHp = 10;
-            var game = new Game(difficulty, golemMaxHp);
+            var game = new Game(GameInit.getPlayerName(1), GameInit.getPlayerName(2),
+                    GameInit.getDifficulty(), GameInit.chooseGolemMaxHp());
 
-            Fight.startMatch(game);
+            GameInit.printLoadingText();
+
+            Fight.battle(game);
 
             game.getBalance().printBalance();
         } while (GameInit.quitGame());

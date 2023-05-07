@@ -1,9 +1,6 @@
 package it.unibs.fp.tamaGolem;
 
-import it.ayman.fp.lib.AnsiColors;
-import it.ayman.fp.lib.InputData;
-import it.ayman.fp.lib.PrettyStrings;
-import it.ayman.fp.lib.CommandLineTable;
+import it.ayman.fp.lib.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,39 +13,29 @@ public class Fight {
     private static final String STONE_CHOICE = "Insert the index of the stone you want to give to your TamaGolem:";
     private static final String STONES_FINISHED = COMMAND_SIGN + RED_ATTENTION + "\n" +
             COMMAND_SIGN + "The chosen stone has ran out.";
-    private static String damageDealtMessage(int damage) {
-        return "took " + damage + " damage!";
-    }
-    private static final String SAME_LIST = "\n" + COMMAND_SIGN + "The element chosen by the two players are the same.\n" +
-            "Please choose again:" + "\n";
+    private static final String DAMAGE_DEALT = COMMAND_SIGN + "%s dealt %d damage to %s";
+    private static String NO_DAMAGE_DEALT = COMMAND_SIGN + "None of the two TamaGolems was hurt!";
+    private static String GOLEM_1 = "Golem1";
+    private static String GOLEM_2 = "Golem2";
+    private static final String SAME_LIST = COMMAND_SIGN + RED_ATTENTION + "\n" + COMMAND_SIGN + "You chose the same elements as %s. Please choose again.";
     private static final String DEAD_GOLEM = PrettyStrings.colorString(" died!", AnsiColors.RED);
-    private static final String WIN_MESSAGE1 = " won! Amazing!\n";
-    private static final String WIN_MESSAGE2 = " won! What a fight!\n";
+    private static final String WIN_MESSAGE = "won";
 
     /**
      * Metodo che inserisce nella lista fornita gli elementi scelti dal giocatore
      * @param game in cui ci si trova
      * @param golem a gui aggiungere la pietra scelta
      */
-    public static void stoneChoices (Game game, TamaGolem golem) {
+    public static List<Element> selectGolemStones (Game game, TamaGolem golem) {
         List<Element> tempList = new ArrayList<>();
 
         //Stampa di messaggi e tabella per interazione con l'utente
         System.out.println(SELECT_STONE);
-        CommandLineTable viewChest = new CommandLineTable();
-        viewChest.setShowVerticalLines(true);
-        viewChest.setHeaders("Index", "Element", "Number of Stones");
-        int index = 1;
-        for (Element element : game.getElements()) {
-            viewChest.addRow(String.valueOf(index), element.toString(),
-                    String.valueOf(game.getChest().get(index - 1).size()));
-            index++;
-        }
-        viewChest.print();
 
         //Scelta del giocatore
-        boolean validIndex;
         Element chosenElement;
+
+        game.printChest();
 
         for (int i = 0; i < game.getStonesPerGolem(); i++) {
             do {
@@ -65,7 +52,7 @@ public class Fight {
 
             tempList.add(chosenElement);
         }
-        golem.setStoneList(tempList);
+        return tempList;
     }
 
     /**
@@ -75,8 +62,7 @@ public class Fight {
      * @param golem1 primo golem combattente
      * @param golem2 secondo golem combattente
      * @param game il game in cui ci si trova durante questo ciclo
-     * @return  1 -> golem1 è sconfitto
-     *          2 -> golem2 è sconfitto
+     * @return  1 -> golem1 è sconfitto / 2 -> golem2 è sconfitto
      */
     private static int fightCycle (TamaGolem golem1, TamaGolem golem2, Game game) {
         //Inizializza gli hp dei golem
@@ -105,20 +91,18 @@ public class Fight {
             elementIndex++;
         }
 
-        if (hp1 <= 0){
-            System.out.println("Golem 1" + DEAD_GOLEM);
-            return 1;
+        if (golem1.getHp() <= 0){
+            System.out.println(GOLEM_1 + " " + DEAD_GOLEM);
         }
 
         else{
-            System.out.println("Golem 2" + DEAD_GOLEM);
-            return 2;
+            System.out.println(GOLEM_2 + " " + DEAD_GOLEM);
         }
     }
 
-    private static boolean sameList (TamaGolem golem1, TamaGolem golem2) {
+    private static boolean sameList (TamaGolem golem1, TamaGolem golem2, Game game) {
         if (golem1.getStoneList().equals(golem2.getStoneList())){
-            System.out.println(SAME_LIST);
+            System.out.printf((SAME_LIST) + "%n", game.getPlayer1().getName());
             return true;
         }
         return false;
@@ -129,53 +113,65 @@ public class Fight {
      * chest, le inserisce nei golem e inizia lo scontro fra i due
      * @param game il game in cui avviene lo scontro
      */
-    public static void startMatch (Game game) {
-        //Indici per posizionarsi sul golem corrente
-        //Golem1 = tutti i golem del player1
-        //Golem2 = tutti i golem del player2
-        int currentGolem1, currentGolem2;
-        currentGolem1 = currentGolem2 = 0;
+    public static void battle (Game game) {
+        TamaGolem currentGolem1 = game.getPlayer1().getCurrentGolem();
+        TamaGolem currentGolem2 = game.getPlayer2().getCurrentGolem();
 
-        int golemNumber = game.getPlayer1().getGolemList().size();
-        do {
-            //Scelta delle pietre, prima del player1 e poi del player2
-            Fight.stoneChoices(game, game.getPlayer1().getGolemList().get(currentGolem1));
-            Fight.stoneChoices(game, game.getPlayer2().getGolemList().get(currentGolem2));
-        } while(sameList(game.getPlayer1().getGolemList().get(currentGolem1),
-                game.getPlayer2().getGolemList().get(currentGolem2)));
+        //Scelta delle pietre, prima del player1 e poi del player2
+        List<Element> list1 = Fight.selectGolemStones(game, currentGolem1);
+        game.removeStoneListFromChest(list1);
+        currentGolem1.setStoneList(list1);
 
-        //Boolean che memorizzano lo stato corrente di ogni player
-        //Se uno dei due diventa true, il corrispettivo player non possiede più alcun golem in vita
-        boolean noMoreGolem1 = false;
-        boolean noMoreGolem2 = false;
+        List<Element> list2 = Fight.selectGolemStones(game, currentGolem2);
+        currentGolem2.setStoneList(list2);
 
-        while(!noMoreGolem1 && !noMoreGolem2){
+        while(sameList(currentGolem1, currentGolem2, game)) {
+            list2 = Fight.selectGolemStones(game, currentGolem2);
+            currentGolem2.setStoneList(list2);
+        }
+
+        game.removeStoneListFromChest(list2);
+
+        while(currentGolem1 != null && currentGolem2 != null) {
             //Variabile che salva il numero del golem sconfitto in questa battaglia
             int defeated = fightCycle(game.getPlayer1().getGolemList().get(currentGolem1),
                             game.getPlayer2().getGolemList().get(currentGolem2), game);
 
             //Se il golem sconfitto è quello del primo giocatore, il currentGolem1 dovrà aumentare, e viceversa
             //Inoltre, il relativo giocatore dovrà scegliere le pietre per il nuovo golem
-            if(defeated == 1) {
-                currentGolem1++;
-                if(currentGolem1 < golemNumber)
-                    Fight.stoneChoices(game, game.getPlayer1().getGolemList().get(currentGolem1));
-                else
-                    noMoreGolem1 = true;
-            }
-            else {
-                currentGolem2++;
-                if(currentGolem2 < golemNumber)
-                    Fight.stoneChoices(game, game.getPlayer2().getGolemList().get(currentGolem2));
-                else
-                    noMoreGolem2 = true;
+            TamaGolem previousGolem1 = currentGolem1;
+            currentGolem1 = game.getPlayer1().getCurrentGolem();
+            currentGolem2 = game.getPlayer2().getCurrentGolem();
+
+            if(currentGolem1 != null && currentGolem2 != null){
+                if (previousGolem1 == currentGolem1) {
+                    list2 = Fight.selectGolemStones(game, currentGolem2);
+                    currentGolem2.setStoneList(list2);
+
+                    while(sameList(currentGolem1, currentGolem2, game)) {
+                        list2 = Fight.selectGolemStones(game, currentGolem2);
+                        currentGolem2.setStoneList(list2);
+                    }
+
+                    game.removeStoneListFromChest(list2);
+                }
+                else {
+                    list1 = Fight.selectGolemStones(game, currentGolem1);
+                    currentGolem1.setStoneList(list1);
+
+                    while (sameList(currentGolem1, currentGolem2, game)) {
+                        list1 = Fight.selectGolemStones(game, currentGolem1);
+                        currentGolem1.setStoneList(list1);
+                    }
+
+                    game.removeStoneListFromChest(list1);
+                }
             }
         }
-        if (noMoreGolem1)
-            System.out.println("Player2" + WIN_MESSAGE2);
+
+        if (currentGolem1 == null)
+            System.out.println(Title.createTitle(game.getPlayer2().getName() + " " + WIN_MESSAGE, false));
         else
-            System.out.println("Player1" + WIN_MESSAGE1);
+            System.out.println(Title.createTitle(game.getPlayer1().getName() + " " + WIN_MESSAGE, false));
     }
 }
-
-

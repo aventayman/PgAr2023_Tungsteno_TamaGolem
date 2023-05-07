@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Player {
-    private List<TamaGolem> golemList = new ArrayList<>();
+    private final String name;
+    private final List<TamaGolem> golemList;
 
-    public Player(int golemAmount, int golemHp) {
+    public Player(String name, int golemAmount, int golemHp) {
+        this.name = name;
         this.golemList = createGolemList(golemAmount, golemHp);
     }
 
@@ -22,6 +24,19 @@ public class Player {
             list.add(golem);
         }
         return list;
+    }
+
+    public TamaGolem getCurrentGolem () {
+        for (TamaGolem golem : golemList) {
+            if (golem.getHp() > 0)
+                return golem;
+        }
+
+        return null;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public List<TamaGolem> getGolemList() {

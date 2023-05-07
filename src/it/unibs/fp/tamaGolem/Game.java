@@ -1,5 +1,7 @@
 package it.unibs.fp.tamaGolem;
 
+import it.ayman.fp.lib.CommandLineTable;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -23,13 +25,13 @@ public class Game {
     private final Player player1;
     private final Player player2;
 
-    public Game(int elementAmount, int maxHp) {
+    public Game(String player1Name, String player2Name, int elementAmount, int maxHp) {
         this.elementAmount = elementAmount;
         this.maxHp = maxHp;
         this.elements = setElements(elementAmount);
         this.chest = createStoneChest();
-        this.player1 = new Player(getGolemNum(), maxHp);
-        this.player2 = new Player(getGolemNum(), maxHp);
+        this.player1 = new Player(player1Name, getGolemNum(), maxHp);
+        this.player2 = new Player(player2Name, getGolemNum(), maxHp);
         this.balance = new Balance(elementAmount, maxHp);
     }
 
@@ -55,9 +57,7 @@ public class Game {
 
     private Element [] setElements(int elementAmount) {
         var elementArray = new Element[elementAmount];
-        for (int i = 0; i < elementAmount; i++) {
-            elementArray[i] = Element.values()[i];
-        }
+        System.arraycopy(Element.values(), 0, elementArray, 0, elementAmount);
         return elementArray;
     }
 
@@ -76,7 +76,7 @@ public class Game {
      * Utilizza le formule fornite dal regolamento per calcolare il valore richiesto
      * @return il numero di golem per la partita
      */
-    private int getGolemNum () {
+    public int getGolemNum () {
         return (int)Math.ceil(((float)(elementAmount-1)*(elementAmount-2)/(2*getStonesPerGolem())));
     }
 
@@ -85,7 +85,7 @@ public class Game {
      * Utilizza le formule fornite dal regolamento per calcolare il valore richiesto
      * @return il numero di pietre presenti nella sacca comune
      */
-    private int getChestDim() {
+    public int getChestDim() {
         return (int)(Math.ceil((float)(2*getGolemNum()*getStonesPerGolem())/elementAmount)) * elementAmount;
     }
 
@@ -94,7 +94,7 @@ public class Game {
      * Utilizza la formula fornita dal regolamento per calcolare il valore richiesto
      * @return il numero di pietre per elemento
      */
-    private int getStonesPerElement() {
+    public int getStonesPerElement() {
         return getChestDim()/elementAmount;
     }
 
@@ -108,6 +108,39 @@ public class Game {
         return chest;
     }
 
+    public void printChest() {
+        CommandLineTable viewChest = new CommandLineTable();
+        viewChest.setShowVerticalLines(true);
+        viewChest.setHeaders("Index", "Element", "Number of Stones");
+        int index = 1;
+        for (Element element : elements) {
+            viewChest.addRow(String.valueOf(index), element.toString(),
+                    String.valueOf(chest.get(index - 1).size()));
+            index++;
+        }
+        viewChest.print();
+    }
+
+    public boolean isStoneInChest(Element stone) {
+        for (List<Element> elementCompartment: chest) {
+            if (elementCompartment.contains(stone)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void removeStoneFromChest(Element stone) {
+        for (List<Element> elementCompartment: chest) {
+            elementCompartment.remove(stone);
+        }
+    }
+
+    public void removeStoneListFromChest(List<Element> stones) {
+        for (Element stone : stones) {
+            removeStoneFromChest(stone);
+        }
+    }
 
     public Element [] getElements() {
         return elements;

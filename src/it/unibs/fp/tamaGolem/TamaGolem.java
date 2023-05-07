@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TamaGolem {
-    private List<Element> stoneList = new ArrayList<>();
-    private final int hp;
+    private List<Element> stoneList;
+    private int hp;
 
     public TamaGolem(List<Element> stoneList, int hp) {
         this.stoneList = stoneList;
