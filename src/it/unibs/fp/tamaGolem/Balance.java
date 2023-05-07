@@ -214,7 +214,7 @@ public class Balance {
     public void printBalance() {
         int GRID_SIZE = balance.length;
         System.out.println("Here's the balance of the world, brave golem tamer!\n");
-        //Da rimuovere
+
         for (int[] row : balance) {
             for (int j = 0; j < GRID_SIZE; j++) {
                 System.out.printf("%6d", row[j]);

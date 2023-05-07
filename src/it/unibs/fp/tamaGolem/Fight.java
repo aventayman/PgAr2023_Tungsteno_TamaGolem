@@ -38,17 +38,14 @@ public class Fight {
         game.printChest();
 
         for (int i = 0; i < game.getStonesPerGolem(); i++) {
-            do {
-                validIndex = true;
-                int choice = InputData.readIntegerBetween(STONE_CHOICE, 1, game.getElements().length) - 1;
+            int choice = InputData.readIntegerBetween(STONE_CHOICE, 1, game.getElements().length) - 1;
+            chosenElement = game.getElements()[choice];
+
+            while (!game.isStoneInChest(chosenElement)) {
+                System.out.println(STONES_FINISHED);
+                choice = InputData.readIntegerBetween(STONE_CHOICE, 1, game.getElements().length) - 1;
                 chosenElement = game.getElements()[choice];
-                try {
-                    game.getChest().get(choice).remove(0);
-                } catch (IndexOutOfBoundsException exception) {
-                    validIndex = false;
-                    System.out.println(STONES_FINISHED);
-                }
-            } while (!validIndex);
+            }
 
             tempList.add(chosenElement);
         }
@@ -64,31 +61,31 @@ public class Fight {
      * @param game il game in cui ci si trova durante questo ciclo
      * @return  1 -> golem1 è sconfitto / 2 -> golem2 è sconfitto
      */
-    private static int fightCycle (TamaGolem golem1, TamaGolem golem2, Game game) {
-        //Inizializza gli hp dei golem
-        int hp1, hp2;
-        hp1 = hp2 = golem1.getHp();
+    private static void fightCycle (TamaGolem golem1, TamaGolem golem2, Game game) {
 
-        int elementIndex = 0;
+        int stoneIndex = 0;
+
         //Ciclo while che si ripete fino a quando uno dei due golem non termina gli hp
-        while (hp1 > 0 && hp2 > 0) {
+        while (golem1.getHp() > 0 && golem2.getHp() > 0) {
             //Variabile di supporto che varierà da zero al numero massimo di pietre per golem -1
             //Serve per reiterare al'interno della lista di pietre di un golem, ripetendo i lanci ciclicamente
-            elementIndex = elementIndex % game.getStonesPerGolem();
+            stoneIndex = stoneIndex % game.getStonesPerGolem();
 
-            int damageDealt = game.evaluateDamage(golem1.getStoneList().get(elementIndex),
-                    golem2.getStoneList().get(elementIndex));
+            int damageDealt = game.evaluateDamage(golem1.getStoneList().get(stoneIndex),
+                    golem2.getStoneList().get(stoneIndex));
 
             //Se il damageDealt è positivo, vuol dire che golem1 infligge danni, in caso contrario li riceve
             if (damageDealt > 0) {
-                hp2 -= damageDealt;
-                System.out.println("Golem2" + damageDealtMessage(damageDealt));
+                golem2.setHp(golem2.getHp() - damageDealt);
+                System.out.printf(DAMAGE_DEALT + "\n", GOLEM_1, damageDealt, GOLEM_2);
             }
-            else {
-                hp1 += damageDealt;
-                System.out.println("Golem1" + damageDealtMessage(-damageDealt));
+            else if (damageDealt < 0) {
+                golem1.setHp(golem1.getHp() + damageDealt);
+                System.out.printf(DAMAGE_DEALT + "\n", GOLEM_2, -damageDealt, GOLEM_1);
             }
-            elementIndex++;
+            else
+                System.out.println(NO_DAMAGE_DEALT);
+            stoneIndex++;
         }
 
         if (golem1.getHp() <= 0){
@@ -134,8 +131,7 @@ public class Fight {
 
         while(currentGolem1 != null && currentGolem2 != null) {
             //Variabile che salva il numero del golem sconfitto in questa battaglia
-            int defeated = fightCycle(game.getPlayer1().getGolemList().get(currentGolem1),
-                            game.getPlayer2().getGolemList().get(currentGolem2), game);
+            fightCycle(currentGolem1, currentGolem2, game);
 
             //Se il golem sconfitto è quello del primo giocatore, il currentGolem1 dovrà aumentare, e viceversa
             //Inoltre, il relativo giocatore dovrà scegliere le pietre per il nuovo golem
