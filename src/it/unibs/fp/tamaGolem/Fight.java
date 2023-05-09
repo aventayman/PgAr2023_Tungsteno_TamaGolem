@@ -118,13 +118,20 @@ public class Fight {
         return false;
     }
 
+    /**
+     * Metodo che viene richiamato quando occorre la selezione da parte del giocatore delle pietre da assegnare ai golem
+     * @param golem1 golem a cui assegnare la nuova lista
+     * @param golem2 golem per il confronto, in caso le liste fossero uguali
+     * @param game il game in cui avviene lo scontro
+     * @param player riguardo cui verranno stampati i messaggi a schermo
+     */
     private static void stoneSelection(TamaGolem golem1, TamaGolem golem2, Game game, Player player) {
         List<Element> stoneList = selectGolemStones(game, player);
-        golem2.setStoneList(stoneList);
+        golem1.setStoneList(stoneList);
 
         while(sameList(golem1, golem2)) {
             stoneList = selectGolemStones(game, player);
-            golem2.setStoneList(stoneList);
+            golem1.setStoneList(stoneList);
         }
 
         game.removeStoneListFromChest(stoneList);
@@ -143,7 +150,7 @@ public class Fight {
         game.removeStoneListFromChest(stoneList);
         currentGolem1.setStoneList(stoneList);
 
-        stoneSelection(currentGolem1, currentGolem2, game, game.getPlayer2());
+        stoneSelection(currentGolem2, currentGolem1, game, game.getPlayer2());
 
         int turn = 1;
         while(currentGolem1 != null && currentGolem2 != null) {
@@ -159,11 +166,13 @@ public class Fight {
             currentGolem2 = game.getPlayer2().getCurrentGolem();
 
             if(currentGolem1 != null && currentGolem2 != null){
+                //Se il golem precedente, ovvero quello in vita, è ancora il golem1, allora:
                 if (previousGolem1 == currentGolem1) {
-                    stoneSelection(currentGolem2, currentGolem1, game, game.getPlayer1());
+                    stoneSelection(currentGolem2, currentGolem1, game, game.getPlayer2());
                 }
+                //Altrimenti si tratta del golem2 quello ancora in vita, e quindi:
                 else {
-                    stoneSelection(currentGolem1, currentGolem2, game, game.getPlayer2());
+                    stoneSelection(currentGolem1, currentGolem2, game, game.getPlayer1());
                 }
             }
         }
