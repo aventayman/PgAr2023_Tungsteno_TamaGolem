@@ -9,6 +9,12 @@ public class Balance {
         this.balance = createBalance(n, hp);
     }
 
+    /**
+     * Metodo per generare il balance
+     * @param n numero di elementi per il game
+     * @param hp vita massima dei golem
+     * @return
+     */
     public int[][] createBalance(int n, int hp) {
         int [][] matrix;
         //Generazione di n - 1 coppie di indici da inizializzare random
@@ -119,10 +125,14 @@ public class Balance {
         return true;
     }
 
-    public int[][] getBalance() {
-        return balance;
-    }
-
+    /**
+     * Metodo per risolvere la matrice, ovvero per aggiungere i numeri mancanti dopo la generazione dei valori iniziali.
+     * Il metodo risolve la matrice inserendo numeri che rispettano i parametri i generazione imposti dalla consegna.
+     * @param matrix la matrice da risolvere
+     * @param hp gli hp max dei golem
+     * @return true se la matrice è stata risolta, false se si tratta di una matrice irrisolvibile per i numeri generati
+     * inizialmente
+     */
     private boolean solveMatrix(int [][] matrix, int hp) {
         int n = matrix.length;
         for (int row = 0; row < n; row++) {
@@ -189,6 +199,12 @@ public class Balance {
         return true;
     }
 
+    /**
+     * Metodo per controllare che una riga sia piena. Una riga è piena se contiene più di uno zero al suo interno.
+     * @param matrix matrice da controllare
+     * @param row riga della matrice da controllare
+     * @return true se è piena, false in caso contrario
+     */
     private boolean isFullRow(int [][] matrix, int row) {
         int zeroCounter = 0;
         for (int element : matrix[row]) {
@@ -199,11 +215,21 @@ public class Balance {
         return zeroCounter < 2;
     }
 
+    /**
+     * Metodo per controllare se una riga è valida per i criteri imposti
+     * @param matrix la matrice da controllare
+     * @param row la riga della matrice da controllare
+     * @return true se la riga è valida, false in caso contrario
+     */
     private boolean isValidRow(int [][] matrix, int row) {
         int sum = 0;
         for (int number : matrix[row])
             sum += number;
 
         return sum == 0;
+    }
+
+    public int[][] getBalance() {
+        return balance;
     }
 }

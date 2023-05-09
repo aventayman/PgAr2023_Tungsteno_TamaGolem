@@ -13,7 +13,7 @@ public class Fight {
     private static final String STONE_CHOICE = "Insert the index of the stone you want to give to your TamaGolem:";
     private static final String STONES_FINISHED = COMMAND_SIGN + RED_ATTENTION + "\n" +
             COMMAND_SIGN + "The chosen stone has ran out.";
-    private static final String DAMAGE_DEALT = COMMAND_SIGN + "%s with %s stone dealt %d damage to %s";
+    private static final String DAMAGE_DEALT = COMMAND_SIGN + "%s with %s stone dealt %d damage to %s, who held the %s stone";
     private static final String NO_DAMAGE_DEALT = COMMAND_SIGN + "None of the two TamaGolems was hurt!";
     private static final String SAME_LIST = COMMAND_SIGN + RED_ATTENTION + "\n" + COMMAND_SIGN
             + "You chose the same elements as the other player. Please choose again.";
@@ -86,13 +86,13 @@ public class Fight {
                 golem2.setHp(golem2.getHp() - damageDealt);
                 System.out.printf(DAMAGE_DEALT + "\n", PrettyStrings.colorString(golem1.getName(), AnsiColors.RED),
                         golem1.getStoneList().get(stoneIndex) , damageDealt,
-                        PrettyStrings.colorString(golem2.getName(), AnsiColors.BLUE));
+                        PrettyStrings.colorString(golem2.getName(), AnsiColors.BLUE), golem2.getStoneList().get(stoneIndex));
             }
             else if (damageDealt < 0) {
                 golem1.setHp(golem1.getHp() + damageDealt);
                 System.out.printf(DAMAGE_DEALT + "\n", PrettyStrings.colorString(golem2.getName(), AnsiColors.BLUE),
                         golem2.getStoneList().get(stoneIndex), -damageDealt,
-                        PrettyStrings.colorString(golem1.getName(), AnsiColors.RED));
+                        PrettyStrings.colorString(golem1.getName(), AnsiColors.RED), golem1.getStoneList().get(stoneIndex));
             }
             //Caso in cui le pietre sono uguali, e quindi il danno è nullo
             else
