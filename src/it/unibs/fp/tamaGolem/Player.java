@@ -19,7 +19,7 @@ public class Player {
     /**
      * Metodo di creazione della lista di golem appartenente a un giocatore
      * @param golemAmount numero di TamaGolem della partita
-     * @return una arraylist di TamaGolem
+     * @return una list di TamaGolem, che non possiedono alcuna pietra e con l'hp indicato
      */
     private static List<TamaGolem> createGolemList (int golemAmount, int golemHp){
         List<TamaGolem> list = new ArrayList<>();
@@ -30,12 +30,16 @@ public class Player {
         return list;
     }
 
+    /**
+     * Metodo che restituisce il primo golem nella lista del giocatore ad avere hp != 0
+     * Se tutti i golem del pplayer sono morti, ritorna null
+     * @return il primo golem con hp != 0, null se non ci sono golem vivi
+     */
     public TamaGolem getCurrentGolem () {
         for (TamaGolem golem : golemList) {
             if (golem.getHp() > 0)
                 return golem;
         }
-
         return null;
     }
 
