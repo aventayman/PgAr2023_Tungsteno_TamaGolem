@@ -13,7 +13,7 @@ public class Balance {
      * Metodo per generare il balance
      * @param n numero di elementi per il game
      * @param hp vita massima dei golem
-     * @return
+     * @return la matrice di int caratterizzante il balance
      */
     public int[][] createBalance(int n, int hp) {
         int [][] matrix;
