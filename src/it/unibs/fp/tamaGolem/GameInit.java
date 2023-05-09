@@ -34,8 +34,8 @@ public class GameInit {
     }
 
     /**
-     * Metodo che genera il menu iniziale, fa scegliere la difficoltà e aggiunge gli elementi alla lista di elementi nel
-     * game, in modo che successivamente si possa lavorare direttamente su quella
+     * Metodo che genera il menu iniziale, fa scegliere la difficoltà e di conseguenza il numero di elementi per
+     * la partita corrente, in modo da ricavare successivamente gli altri dati
      */
     public static int getDifficulty() {
         int elementAmount = 0;
@@ -75,7 +75,7 @@ public class GameInit {
 
     /**
      * Metodo di uscita dal gioco
-     * @return true se viene inserito Y, false se viene inserito N
+     * @return true se viene inserito un carattere Yes, false se viene inserito un carattere No
      */
     public static boolean quitGame () {
         return InputData.readYesOrNo(PLAY_AGAIN);

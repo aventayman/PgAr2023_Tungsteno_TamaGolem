@@ -123,10 +123,6 @@ public class Balance {
         return balance;
     }
 
-    public void setBalance(int[][] balance) {
-        this.balance = balance;
-    }
-
     private boolean solveMatrix(int [][] matrix, int hp) {
         int n = matrix.length;
         for (int row = 0; row < n; row++) {

@@ -24,7 +24,18 @@ public class Game {
     private final List<List<Element>> chest;
     private final Player player1;
     private final Player player2;
+    private static final String INDEX = "Index";
+    private static final String ELEMENT= "Element";
+    private static final String STONE_NUMBER = "Number of stones";
 
+    /**
+     * Metodo d'inizializzazione di una partita. Acquisisce l'elementAmount della partita corrente e aggiorna tutti i
+     * di conseguenza
+     * @param player1Name Nome del primo player
+     * @param player2Name Nome del secondo player
+     * @param elementAmount numero di elementi per la partita corrente
+     * @param maxHp vita massima dei golem
+     */
     public Game(String player1Name, String player2Name, int elementAmount, int maxHp) {
         this.elementAmount = elementAmount;
         this.elements = setElements(elementAmount);
@@ -80,16 +91,16 @@ public class Game {
     }
 
     /**
-     * Metodo che ritorna il numero di pietre che saranno presenti nella sacca comune
+     * Metodo che ritorna il numero di pietre che saranno presenti nella chest
      * Utilizza le formule fornite dal regolamento per calcolare il valore richiesto
-     * @return il numero di pietre presenti nella sacca comune
+     * @return il numero di pietre presenti nella chest
      */
     public int getChestDim() {
         return (int)(Math.ceil((float)(2*getGolemNum()*getStonesPerGolem())/elementAmount)) * elementAmount;
     }
 
     /**
-     * Metodo che fornisce il numero di pietre per ciascun elemento che ci saranno della sacca comune
+     * Metodo che fornisce il numero di pietre per ciascun elemento che ci saranno della chest
      * Utilizza la formula fornita dal regolamento per calcolare il valore richiesto
      * @return il numero di pietre per elemento
      */
@@ -97,6 +108,10 @@ public class Game {
         return getChestDim()/elementAmount;
     }
 
+    /**
+     * Metodo ci creazione della stone chest
+     * @return una lista di liste di element, tante quante sono le pietre di quell'element per quel game
+     */
     private List<List<Element>> createStoneChest() {
         List<List<Element>> chest = new ArrayList<>();
         for (int i = 0; i < elementAmount; i++) {
@@ -106,10 +121,6 @@ public class Game {
         }
         return chest;
     }
-
-    private static final String INDEX = "Index";
-    private static final String ELEMENT= "Element";
-    private static final String STONE_NUMBER = "Number of stones";
 
     public void printChest() {
         var viewChest = new CommandLineTable();
@@ -124,6 +135,11 @@ public class Game {
         viewChest.print();
     }
 
+    /**
+     * Metodo per controllare che una pietra si trovi ancora dentro la chest
+     * @param stone pietra da verificare
+     * @return true se la chest contiene la pietra, false in caso contrario
+     */
     public boolean isStoneInChest(Element stone) {
         for (List<Element> elementCompartment: chest) {
             if (elementCompartment.contains(stone)) {
@@ -133,12 +149,20 @@ public class Game {
         return false;
     }
 
+    /**
+     * Metodo per rimuovere una pietra dalla chest
+     * @param stone la pietra da rimuovere
+     */
     public void removeStoneFromChest(Element stone) {
         for (List<Element> elementCompartment: chest) {
             elementCompartment.remove(stone);
         }
     }
 
+    /**
+     * Metodo per rimuovere una stoneList dalla chest
+     * @param stones le pietre da rimuovere
+     */
     public void removeStoneListFromChest(List<Element> stones) {
         for (Element stone : stones) {
             removeStoneFromChest(stone);
@@ -158,6 +182,10 @@ public class Game {
     }
 
     private static final String BALANCE_MESSAGE = "Here's the balance of the world, brave golem tamer!";
+
+    /**
+     * Metodo di stampa del balance della partita.
+     */
     public void printBalance() {
         System.out.println(BALANCE_MESSAGE);
         var viewBalance = new CommandLineTable();
