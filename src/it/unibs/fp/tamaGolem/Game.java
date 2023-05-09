@@ -4,7 +4,10 @@ import it.ayman.fp.lib.CommandLineTable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 /**
@@ -172,25 +175,28 @@ public class Game {
                 ", player2=" + player2 +
                 '}';
     }
-   /* public void printBalance() {
+    public void printBalance() {
 
         System.out.println("Here's the balance of the world, brave golem tamer!\n");
-        var viewChest = new CommandLineTable();
-        viewChest.setShowVerticalLines(true);
+        var viewBalance = new CommandLineTable();
+        viewBalance.setShowVerticalLines(true);
+        List<Element> pippo = new ArrayList<>(EnumSet.allOf(Element.class));
+        List<String> franco = new ArrayList<>(Stream.of(elements).map(Element::name).toList());
+        franco.add(0, " ");
+        viewBalance.setHeaders(franco.toArray(new String[0]));
 
-        viewChest.setHeaders(elements.toString());
 
         int GRID_SIZE = balance.getBalance().length;
-        for (int[] row : balance.getBalance()) {
-            for (int j = 0; j < GRID_SIZE; j++) {
-
-                viewChest.addRow(elements.toString() , Integer.toString(row[j]));
+        for (int i = 0; i < GRID_SIZE; i++) {
+            List<String> rowArray = new ArrayList<>();
+            rowArray.add(elements[i].toString());
+            for (int number : balance.getBalance()[i]) {
+                rowArray.add(Integer.toString(number));
             }
-            System.out.print("\n");
+            viewBalance.addRow(rowArray.toArray(new String[0]));
         }
-        viewChest.print();
+        viewBalance.print();
 
     }
 
-*/
 }

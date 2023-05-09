@@ -1,5 +1,7 @@
 package it.unibs.fp.tamaGolem;
 
+import it.ayman.fp.lib.RandomDraws;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,14 +11,16 @@ import java.util.RandomAccess;
 public class TamaGolem {
     private List<Element> stoneList;
     private int hp;
-    private final NameTamagolem[] nameList = NameTamagolem.values() ;
+    private enum tamagolemNames {
+        PIPPO, FRANCO, FRANCESCO, ARTURO, GUIDO, FRANGO, ANNIBALE, BROK, CESCO, FRANCESCHINO
+    }
 
     private final String name;
 
     public TamaGolem(List<Element> stoneList, int hp) {
         this.stoneList = stoneList;
         this.hp = hp;
-        this.name = nameList[(int)Math.floor(Math.random() *(9) + 0 )].toString();
+        this.name = tamagolemNames.values()[RandomDraws.drawInteger(0, tamagolemNames.values().length - 1)].toString();
 
     }
 
@@ -26,10 +30,6 @@ public class TamaGolem {
 
     public void setHp(int hp) {
         this.hp = hp;
-    }
-
-    public NameTamagolem[] getNameList() {
-        return nameList;
     }
 
     public String getName() {

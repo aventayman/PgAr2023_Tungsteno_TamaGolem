@@ -15,7 +15,7 @@ public class Main {
 
             Fight.battle(game);
 
-            game.getBalance().printBalance();
+            game.printBalance();
         } while (GameInit.quitGame());
     }
 

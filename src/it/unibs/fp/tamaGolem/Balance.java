@@ -212,7 +212,8 @@ public class Balance {
         return sum == 0;
     }
 
-    public void printBalance() {
+   /*
+   public void printBalance() {
         var viewChest = new CommandLineTable();
         viewChest.setShowVerticalLines(true);
         viewChest.setHeaders();
@@ -226,5 +227,5 @@ public class Balance {
             System.out.print("\n");
         }
     }
-
+*/
 }

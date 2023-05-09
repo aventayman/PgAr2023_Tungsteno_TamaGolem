@@ -1,5 +1,7 @@
 package it.unibs.fp.tamaGolem;
 
+import java.util.stream.Stream;
+
 public enum Element {
     WATER,
     FIRE,
@@ -10,5 +12,5 @@ public enum Element {
     ELECTRO,
     ANTIMATTER,
     LIGHT,
-    DARKNESS
+    DARKNESS;
 }
