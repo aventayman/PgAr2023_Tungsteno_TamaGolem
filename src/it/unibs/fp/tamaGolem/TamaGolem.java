@@ -2,11 +2,7 @@ package it.unibs.fp.tamaGolem;
 
 import it.ayman.fp.lib.RandomDraws;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-import java.util.RandomAccess;
 
 public class TamaGolem {
     private List<Element> stoneList;

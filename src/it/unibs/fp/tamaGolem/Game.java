@@ -1,12 +1,10 @@
 package it.unibs.fp.tamaGolem;
 
+import it.ayman.fp.lib.AnsiColors;
 import it.ayman.fp.lib.CommandLineTable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.EnumSet;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
@@ -15,7 +13,6 @@ import java.util.stream.Stream;
  */
 public class Game {
     private final int elementAmount;
-    private final int maxHp;
 
     //Equilibrio della partita corrente
     private final Balance balance;
@@ -30,11 +27,10 @@ public class Game {
 
     public Game(String player1Name, String player2Name, int elementAmount, int maxHp) {
         this.elementAmount = elementAmount;
-        this.maxHp = maxHp;
         this.elements = setElements(elementAmount);
         this.chest = createStoneChest();
-        this.player1 = new Player(player1Name, getGolemNum(), maxHp);
-        this.player2 = new Player(player2Name, getGolemNum(), maxHp);
+        this.player1 = new Player(player1Name, AnsiColors.RED, getGolemNum(), maxHp);
+        this.player2 = new Player(player2Name, AnsiColors.BLUE, getGolemNum(), maxHp);
         this.balance = new Balance(elementAmount, maxHp);
     }
 
@@ -111,10 +107,14 @@ public class Game {
         return chest;
     }
 
+    private static final String INDEX = "Index";
+    private static final String ELEMENT= "Element";
+    private static final String STONE_NUMBER = "Number of stones";
+
     public void printChest() {
         var viewChest = new CommandLineTable();
         viewChest.setShowVerticalLines(true);
-        viewChest.setHeaders("Index", "Element", "Number of Stones");
+        viewChest.setHeaders(INDEX, ELEMENT, STONE_NUMBER);
         int index = 1;
         for (Element element : elements) {
             viewChest.addRow(String.valueOf(index), element.toString(),
@@ -149,10 +149,6 @@ public class Game {
         return elements;
     }
 
-    public List<List<Element>> getChest() {
-        return chest;
-    }
-
     public Player getPlayer1() {
         return player1;
     }
@@ -161,26 +157,11 @@ public class Game {
         return player2;
     }
 
-    public Balance getBalance() {
-        return balance;
-    }
-
-    @Override
-    public String toString() {
-        return "Game{" +
-                ", balance=" + balance +
-                ", elements=" + Arrays.toString(elements) +
-                ", chest=" + chest +
-                ", player1=" + player1 +
-                ", player2=" + player2 +
-                '}';
-    }
+    private static final String BALANCE_MESSAGE = "Here's the balance of the world, brave golem tamer!";
     public void printBalance() {
-
-        System.out.println("Here's the balance of the world, brave golem tamer!\n");
+        System.out.println(BALANCE_MESSAGE);
         var viewBalance = new CommandLineTable();
         viewBalance.setShowVerticalLines(true);
-        List<Element> pippo = new ArrayList<>(EnumSet.allOf(Element.class));
         List<String> franco = new ArrayList<>(Stream.of(elements).map(Element::name).toList());
         franco.add(0, " ");
         viewBalance.setHeaders(franco.toArray(new String[0]));
@@ -198,5 +179,4 @@ public class Game {
         viewBalance.print();
 
     }
-
 }

@@ -1,8 +1,5 @@
 package it.unibs.fp.tamaGolem;
 
-import it.ayman.fp.lib.AnsiColors;
-import it.ayman.fp.lib.PrettyStrings;
-
 public class Main {
 
     public static void main(String[] args) throws InterruptedException {

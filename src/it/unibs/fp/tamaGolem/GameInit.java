@@ -10,6 +10,7 @@ import it.ayman.fp.lib.Title;
  */
 public class GameInit {
     private static final String TITLE = "TamaGolem";
+    private static final String WELCOME = "> Welcome to TamaGolem, are you ready to fight to the last stone?";
     private static final String CHOOSE_DIFFICULTY = "Choose the difficulty of the game:";
     private static final String EASY = "Easy (There will be 5 elements in the game)";
     private static final String MEDIUM = "Medium (There will be 7 elements in the game)";
@@ -23,10 +24,13 @@ public class GameInit {
     private static final String INSERT_PLAYER_NAME = "Insert the name of the %s player:";
     private static final String INSERT_GOLEM_HEALTH =
             "Insert the initial health of all the TamaGolems (it must be between 5 and 100):";
-    private static final String [] CARDINAL_NUMBERS = new String[] {"first", "second"};
+    private static final String [] PLAYER_COLORS = new String[] {"red", "blue"};
+    private static final int DELAY = 500;
 
-    public static void printTitle() {
-        System.out.println(Title.createTitle(TITLE, true));
+    public static void printTitle() throws InterruptedException {
+        System.out.println(Title.createTitle(TITLE, true) + "\n");
+        System.out.println(WELCOME + "\n");
+        Menu.wait(DELAY * 5);
     }
 
     /**
@@ -50,19 +54,19 @@ public class GameInit {
 
     public static void printLoadingText() throws InterruptedException {
         Menu.loadingMessage(THANK_YOU);
-        Menu.wait(5);
+        Menu.wait(DELAY);
         System.out.println(CREATING_GOLEMS);
-        Menu.wait(5);
+        Menu.wait(DELAY);
         System.out.println(INITIALIZING_ELEMENTS);
-        Menu.wait(5);
+        Menu.wait(DELAY);
         System.out.println(BALANCING_ELEMENTS);
-        Menu.wait(5);
+        Menu.wait(DELAY);
         Menu.loadingMessage(ALMOST_DONE);
     }
 
     public static String getPlayerName(int playerNumber) {
         return InputData.readNonEmptyString(
-                String.format(INSERT_PLAYER_NAME, CARDINAL_NUMBERS[playerNumber - 1]), true);
+                String.format(INSERT_PLAYER_NAME, PLAYER_COLORS[playerNumber - 1]), true);
     }
 
     public static int chooseGolemMaxHp() {

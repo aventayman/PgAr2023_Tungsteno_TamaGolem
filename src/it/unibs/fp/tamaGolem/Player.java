@@ -1,14 +1,18 @@
 package it.unibs.fp.tamaGolem;
 
+import it.ayman.fp.lib.AnsiColors;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Player {
     private final String name;
+    private final AnsiColors color;
     private final List<TamaGolem> golemList;
 
-    public Player(String name, int golemAmount, int golemHp) {
+    public Player(String name, AnsiColors color, int golemAmount, int golemHp) {
         this.name = name;
+        this.color = color;
         this.golemList = createGolemList(golemAmount, golemHp);
     }
 
@@ -39,7 +43,7 @@ public class Player {
         return name;
     }
 
-    public List<TamaGolem> getGolemList() {
-        return golemList;
+    public AnsiColors getColor() {
+        return color;
     }
 }
