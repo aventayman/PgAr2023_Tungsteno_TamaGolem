@@ -1,5 +1,6 @@
 package it.unibs.fp.tamaGolem;
 
+import it.ayman.fp.lib.CommandLineTable;
 import it.ayman.fp.lib.RandomDraws;
 
 public class Balance {
@@ -212,6 +213,9 @@ public class Balance {
     }
 
     public void printBalance() {
+        var viewChest = new CommandLineTable();
+        viewChest.setShowVerticalLines(true);
+        viewChest.setHeaders();
         int GRID_SIZE = balance.length;
         System.out.println("Here's the balance of the world, brave golem tamer!\n");
 

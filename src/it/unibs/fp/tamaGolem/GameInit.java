@@ -50,13 +50,13 @@ public class GameInit {
 
     public static void printLoadingText() throws InterruptedException {
         Menu.loadingMessage(THANK_YOU);
-        Menu.wait(500);
+        Menu.wait(5);
         System.out.println(CREATING_GOLEMS);
-        Menu.wait(500);
+        Menu.wait(5);
         System.out.println(INITIALIZING_ELEMENTS);
-        Menu.wait(500);
+        Menu.wait(5);
         System.out.println(BALANCING_ELEMENTS);
-        Menu.wait(500);
+        Menu.wait(5);
         Menu.loadingMessage(ALMOST_DONE);
     }
 

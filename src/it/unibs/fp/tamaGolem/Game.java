@@ -109,7 +109,7 @@ public class Game {
     }
 
     public void printChest() {
-        CommandLineTable viewChest = new CommandLineTable();
+        var viewChest = new CommandLineTable();
         viewChest.setShowVerticalLines(true);
         viewChest.setHeaders("Index", "Element", "Number of Stones");
         int index = 1;
@@ -172,4 +172,25 @@ public class Game {
                 ", player2=" + player2 +
                 '}';
     }
+   /* public void printBalance() {
+
+        System.out.println("Here's the balance of the world, brave golem tamer!\n");
+        var viewChest = new CommandLineTable();
+        viewChest.setShowVerticalLines(true);
+
+        viewChest.setHeaders(elements.toString());
+
+        int GRID_SIZE = balance.getBalance().length;
+        for (int[] row : balance.getBalance()) {
+            for (int j = 0; j < GRID_SIZE; j++) {
+
+                viewChest.addRow(elements.toString() , Integer.toString(row[j]));
+            }
+            System.out.print("\n");
+        }
+        viewChest.print();
+
+    }
+
+*/
 }
