@@ -1,0 +1,159 @@
+#INTRODUZIONE
+
+L'equilibrio nel balance viene implementato grazie a una matrice di adiacenza.
+La difficoltà nella creazione della matrice sta nel fatto che deve rispettare determinate richieste.
+La soluzione che abbiamo trovato per la generazione di tale matrice non è delle più concise od ottimizzate,
+ma può reggere tranquillamente generazioni di matrici 10x10 nel giro di pochi millisecondi,
+probabilmente ha una complessità che è riconducibile a O(n^2), ma non ne siamo certi perché in realtà l'ultima parte
+della generazione è random.
+La generazione del balance dipende da due parametri:
+1) Il numero di elementi che ci sono nel game
+2) La vita massima di ogni TamaGolem.
+
+
+#STRUTTURA DELLA MATRICE DI ADIACENZA
+
+La matrice si legge partendo dalla riga e incrociando la colonna, quindi per esempio se avessimo questa matrice:
+
+    +-------+-------+------+-------+-----+-------+
+    |       | WATER | FIRE | EARTH | AIR | ETHER |
+    +-------+-------+------+-------+-----+-------+
+    | WATER | 0     | -5   | 8     | -2  | -1    |
+    +-------+-------+------+-------+-----+-------+
+    | FIRE  | 5     | 0    | 10    | -8  | -7    |
+    +-------+-------+------+-------+-----+-------+
+    | EARTH | -8    | -10  | 0     | 9   | 9     |
+    +-------+-------+------+-------+-----+-------+
+    | AIR   | 2     | 8    | -9    | 0   | -1    |
+    +-------+-------+------+-------+-----+-------+
+    | ETHER | 1     | 7    | -9    | 1   | 0     |
+    +-------+-------+------+-------+-----+-------+
+
+Per esempio possiamo dire che l'elemento FIRE è potente 5 contro l'acqua, allo stesso modo possiamo dire che l'acqua è
+potente -5, poiché subisce danno, contro il fuoco. Quindi la matrice può essere letta per ogni elemento per determinare
+la sua potenza contro tutti gli altri elementi.
+Una delle caratteristiche principali che rendevano l'equilibrio valido era che la somma di tutti i danni che un
+elemento può arrecare deve essere uguale alla somma di tutti i danni che lo stesso elemento può subire.
+Grazie alla conformazione che abbiamo dato alla matrice questo si converte in una semplice somma, infatti la somma di
+tutti i valori presenti su una riga dev'essere uguale a 0 (Per WATER si ha: 0 - 5 + 8 - 2 - 1 = 0).
+
+
+#GENERAZIONE DEL BALANCE
+
+Nella generazione si possono distinguere due fasi principali:
+1) Generazione di alcuni primi valori all'interno della matrice per predeterminarla il più possibile almeno parzialmente
+2) Completamento della matrice, che idealmente dovrebbe avere un'unica soluzione,
+per rendere questa fase quasi istantanea indipendentemente dal numero di elementi
+
+Idealmente quindi vorremmo riuscire a predeterminare la matrice con valori random in indici random,
+in maniera che questa sia univocamente determinata. Ad esempio se riusciamo a riempire la matrice con questi valori:
+
+    +-------+-------+------+-------+-----+-------+
+    |       | WATER | FIRE | EARTH | AIR | ETHER |
+    +-------+-------+------+-------+-----+-------+
+    | WATER | 0     | -5   | 8     |     |       |
+    +-------+-------+------+-------+-----+-------+
+    | FIRE  | 5     | 0    |       | -8  | -7    |
+    +-------+-------+------+-------+-----+-------+
+    | EARTH | -8    |      | 0     |     | 9     |
+    +-------+-------+------+-------+-----+-------+
+    | AIR   |       | 8    |       | 0   |       |
+    +-------+-------+------+-------+-----+-------+
+    | ETHER |       | 7    | -9    |     | 0     |
+    +-------+-------+------+-------+-----+-------+
+
+Esiste un'unica soluzione possibile alla matrice qui di sopra (che è la matrice precedente) e quindi la fase
+di completamento potrà essere fatta molto velocemente. Infatti la matrice non rappresenta altro che un sistema
+di 5 equazioni in 5 incognite, che per quanto riguarda l'esempio qui sopra può essere scritto come:
+
+1) 0 - 5 + 8 + a + b = 0
+2) 5 + 0 + c - 8 - 7 = 0
+3) - 8 - c + 0 + d + 9 = 0
+4) - a + 8 - d + 0 + h = 0
+5) - b + 7 - 9 - h + 0 = 0
+
+Essendo questo un sistema di 5 equazioni in 5 incognite la soluzione è unica.
+
+I problemi cominciano con la generazione degli indici dove vanno generati i numeri casuali. Tali indici non possono
+sovra-definire la matrice, in particolare data la conformazione che abbiamo dato alla tabella la posizione degli indici
+deve rispettare la seguente condizione: la somma del numero di coppie di indici generati su una riga, più la somma
+di quelli generati sulla stessa colonna dev'essere minore del numero di elementi meno 1. Questo perché dato un indice
+generato e il cui valore viene predeterminato verrà predeterminato anche il suo opposto (questo dato che se per esempio
+WATER fa 10 danno a EARTH, allora EARTH fa -10 danno a WATER).
+
+Quindi avviene una generazione di indici casuali all'interno della matrice finché questi non rispettano la condizione
+precedentemente vista. Per quanto riguarda il numero degli indici pre-generati, ci torniamo più avanti.
+
+Per quanto riguarda il completamento, abbiamo detto che se la matrice ha un numero di valori predeterminati abbastanza
+elevato allora la matrice è univocamente determinata. Tuttavia il fatto che sia univocamente determinata non significa
+che rispetti la condizione che il massimo danno che un golem può arrecare o subire non deve essere superiore alla
+vita massima che può avere un golem. Quindi potremmo avere una matrice matematicamente valida, ma che non rispetta le
+regole sopra citate. Per questo motivo, dobbiamo diminuire il numero di valori pre-determinati in modo che la matrice
+possa essere riempita in più modi e successivamente possiamo selezionare solo le matrici valide, soprattutto per
+le matrici più grandi, che sono quelle che richiedono più tempo per essere riempite.
+
+Adesso arriviamo al metodo pratico in cui vengono riempite le matrici. Utilizziamo la ricorsività. Idealmente se non ci
+fosse la condizione del massimo danno e il numero di valori predeterminati fosse il massimo possibile la matrice
+verrebbe riempita attraverso i seguenti step:
+
+1) si parte riempiendo la prima casella disponibile partendo da in alto a sinistra con il valore minimo, ad esempio -100
+2) si controlla se la riga è completamente riempita e abbiamo due casi:
+    2.1) Vero: allora passare allo step numero 3
+    2.2) Falso: vado alla prossima casella disponibile e inizio a riempire quella
+3) si controlla che la riga sia valida, cioè che la somma di tutti i valori sia uguale a 0 e i casi sono due:
+    3.1) Vero: allora passo allo step numero 4
+    3.2) Falso: ciò significa che uno dei valori che avevamo impostato è sbagliato, abbiamo due casi:
+        3.2.1) se il valore che avevo impostato è minore del valore massimo
+        incremento di uno il valore nella casella corrente e torno allo step 2
+        3.2.2) se il valore che avevo impostato è il valore massimo e nonostante ciò nessun valore ha reso la riga
+        valida significa che uno dei valori precedenti era sbagliato, quindi elimino il valore corrente, torno al valore
+        precedente e incremento quello di 1, tornando poi allo step 2
+4) si controlla che la matrice sia valida:
+    4.1) Vero: ho trovato la soluzione alla matrice data
+    4.2) Falso: ho due possibilità
+        4.2.1) se non ho ancora provato a riempire la matrice con tutti i valori possibili
+        devo continuare a riempire la matrice, passo alla casella successiva e torno allo step 2
+        4.2.2) se ho già provato a riempire la matrice con tutti i valori possibili fra il minimo e il massimo
+        significa che questa matrice non può essere risolta con valori compresi fra il minimo e il massimo, devo
+        ripartire da capo e rigenerare gli indici
+
+In questo modo la soluzione non viene per forza trovata, perché non è detto che i valori con cui la proviamo
+a riempire, cioè fra il minimo e il massimo. Per ovviare a questo problema dobbiamo sotto-definire con un numero
+di valori predeterminati minore rispetto a quello massimo, in modo da dare più "agio" e più possibili configurazioni
+in cui può essere completata.
+
+Adesso però si presenta un altro problema, il fatto che se la matrice è sotto-definita e andiamo a riempirla
+ciclicamente partendo dal valore minimo andando in avanti sarà molto probabile che questa venga riempita con i valori
+più vicini al valore minimo possibile, quindi se una matrice parte da valore minimo -10, avremo molte configurazioni
+possibili e la prima configurazione che rende la matrice valida avrà valori tutti molto vicini a 10.
+
+Per ovviare a questo problema dobbiamo aggiungere un elemento di random anche nel riempimento della matrice,
+a discapito della performance di creazione. Perciò partiamo da un numero di indici predeterminati uguale al numero
+degli elementi che per matrici superiori a 5x5 non sovra-definisce sempre la matrice stessa, come farebbe per esempio
+invece per una 3x3 (chiaramente gli indici realmente predeterminati saranno il doppio, per il motivo precedente).
+Poi cominciamo a riempire la matrice non partendo dal minimo ma casualmente, quindi la logica sopra elencata diventa:
+1) si parte riempiendo la prima casella disponibile con un valore casuale fra il minimo e il massimo (ad es. -100 a 100)
+...
+3.2.1) se il valore che avevo impostato è minore del valore massimo lo cambio a un valore casuale sempre fra
+il minimo e il massimo e torno allo step 2
+3.2.2) se il valore che avevo impostato casualmente capita di essere il valore massimo e questo non rende la riga
+valida allora lo elimino, torno indietro e provo a cambiare il numero precedente ad un altro valore casuale e torno
+allo step 2
+...
+
+Questo metodo è più efficiente di quello che ci aspettavamo anche noi, infatti prendendo il tempo medio di risoluzione
+per ogni grandezza di matrice abbiamo i seguenti dati:
+
+5x5 -> 7 ms
+6x6 -> 8 ms
+7x7 -> 15 ms
+8x8 -> 35 ms
+9x9 -> 60 ms
+10x10 -> 120 ms
+
+Chiaramente non è un algoritmo ottimizzato per matrici che vanno oltre le 15x15, oltre a questo i tempi di riempimento
+sarebbero proibitivi e si dovrebbe trovare un altro algoritmo, ma nel limitato tempo che ci è stato concesso questo
+è stato il meglio che siamo riusciti a fare. Un modo per migliorarlo drasticamente sarebbe infatti proprio quello di
+trovare la condizione per cui i valori random che vengono generati causano nel resto della matrice valori incompatibili
+in modo da andare a rigenerare direttamente quelli senza dover tentare di riempire una matrice che non sarà in ogni
+caso valida sprecando tempo e risorse computazionali.
