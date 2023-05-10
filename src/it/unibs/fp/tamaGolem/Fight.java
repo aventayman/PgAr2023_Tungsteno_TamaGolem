@@ -17,9 +17,9 @@ public class Fight {
     private static final String NO_DAMAGE_DEALT = COMMAND_SIGN + "None of the two TamaGolems was hurt!";
     private static final String SAME_LIST = COMMAND_SIGN + RED_ATTENTION + "\n" + COMMAND_SIGN
             + "You chose the same elements as the other player. Please choose again.";
-    private static final String [] DEAD_GOLEM = new String [] {"%s just KILLED %s with his last stone!",
-            "%s has put %s K.O. with his last move!", "After an EPIC FIGHT %s came up on top and DESTROYED %s!",
-            "%s has OBLITERATED %s with his last move!", "Hold on to your seats because and EARTHQUAKE is coming," +
+    private static final String [] DEAD_GOLEM = new String [] {"%s just KILLED %s with his powerful stone!",
+            "%s has put %s K.O. with his unstoppable move!", "After an EPIC FIGHT %s came up on top and DESTROYED %s!",
+            "%s has OBLITERATED %s with his incredible move!", "Hold on to your seats because and EARTHQUAKE is coming," +
             " %s just CRUMBLED %s into small pieces!"};
     private static final String WIN_MESSAGE = "won";
     private static final String TURN = COMMAND_SIGN + PrettyStrings.colorString("TURN %d", AnsiColors.GREEN);
@@ -43,6 +43,13 @@ public class Fight {
 
         game.printChest();
 
+        List<List<Element>> tempChest = new ArrayList<>();
+
+        for (int j = 0; j < game.getElements().length; j++) {
+            tempChest.add(j, new ArrayList<>());
+            tempChest.get(j).addAll(game.getChest().get(j));
+        }
+
         //Ripete l'inserimento di una scelta tante volte quante sono le pietre per golem del game corrente
         for (int i = 0; i < game.getStonesPerGolem(); i++) {
             int choice = InputData.readIntegerBetween(STONE_CHOICE, 1, game.getElements().length) - 1;
@@ -50,12 +57,13 @@ public class Fight {
 
             //Controllo che la pietra scelta sia ancora presente nella chest.
             //In caso contrario stampo un messaggio d'errore e richiedo un nuovo inserimento
-            while (!game.isStoneInChest(chosenElement)) {
+            while (!game.isStoneInChest(chosenElement, tempChest)) {
                 System.out.println(STONES_FINISHED);
                 choice = InputData.readIntegerBetween(STONE_CHOICE, 1, game.getElements().length) - 1;
                 chosenElement = game.getElements()[choice];
             }
 
+            game.removeStoneFromChest(chosenElement, tempChest);
             tempList.add(chosenElement);
         }
 
@@ -112,7 +120,7 @@ public class Fight {
 
         //Se il golem1 non ha più hp, compare il messaggio relativo...
         if (golem1.getHp() <= 0){
-            System.out.printf(COMMAND_SIGN + DEAD_GOLEM [RandomDraws.drawInteger(0, DEAD_GOLEM.length)] + "%n",
+            System.out.printf(COMMAND_SIGN + DEAD_GOLEM [RandomDraws.drawInteger(0, DEAD_GOLEM.length - 1)] + "%n",
                     PrettyStrings.colorString(golem2.getName(), AnsiColors.BLUE),
                     PrettyStrings.colorString(golem1.getName(), AnsiColors.RED));
         }

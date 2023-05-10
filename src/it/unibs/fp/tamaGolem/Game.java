@@ -149,7 +149,7 @@ public class Game {
      * @param stone pietra da verificare
      * @return true se la chest contiene la pietra, false in caso contrario
      */
-    public boolean isStoneInChest(Element stone) {
+    public boolean isStoneInChest(Element stone, List<List<Element>> chest) {
         for (List<Element> elementCompartment: chest) {
             if (elementCompartment.contains(stone)) {
                 return true;
@@ -162,8 +162,8 @@ public class Game {
      * Metodo per rimuovere una pietra dalla chest
      * @param stone la pietra da rimuovere
      */
-    public void removeStoneFromChest(Element stone) {
-        for (List<Element> elementCompartment: chest) {
+    public void removeStoneFromChest(Element stone, List<List<Element>> currentChest) {
+        for (List<Element> elementCompartment: currentChest) {
             elementCompartment.remove(stone);
         }
     }
@@ -174,7 +174,7 @@ public class Game {
      */
     public void removeStoneListFromChest(List<Element> stones) {
         for (Element stone : stones) {
-            removeStoneFromChest(stone);
+            removeStoneFromChest(stone, chest);
         }
     }
 
@@ -215,5 +215,9 @@ public class Game {
         }
         viewBalance.print();
         System.out.println();
+    }
+
+    public List<List<Element>> getChest() {
+        return chest;
     }
 }
