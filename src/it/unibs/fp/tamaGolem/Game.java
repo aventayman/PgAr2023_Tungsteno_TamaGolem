@@ -65,6 +65,12 @@ public class Game {
         return balance.getBalance()[firstIndex][secondIndex];
     }
 
+    /**
+     * Metodo per ritornare un array contenente esattamente gli elementi che ci saranno nella partita in
+     * base alla difficoltà
+     * @param elementAmount il numero di elementi presenti nella partita
+     * @return un array di elementi presenti nella partita
+     */
     private Element [] setElements(int elementAmount) {
         var elementArray = new Element[elementAmount];
         System.arraycopy(Element.values(), 0, elementArray, 0, elementAmount);
@@ -122,6 +128,9 @@ public class Game {
         return chest;
     }
 
+    /**
+     * Metodo di stampa a video dei contenuti presenti nella chest
+     */
     public void printChest() {
         var viewChest = new CommandLineTable();
         viewChest.setShowVerticalLines(true);
@@ -190,9 +199,9 @@ public class Game {
         System.out.println(BALANCE_MESSAGE);
         var viewBalance = new CommandLineTable();
         viewBalance.setShowVerticalLines(true);
-        List<String> franco = new ArrayList<>(Stream.of(elements).map(Element::name).toList());
-        franco.add(0, " ");
-        viewBalance.setHeaders(franco.toArray(new String[0]));
+        List<String> headerArray = new ArrayList<>(Stream.of(elements).map(Element::name).toList());
+        headerArray.add(0, " ");
+        viewBalance.setHeaders(headerArray.toArray(new String[0]));
 
 
         int GRID_SIZE = balance.getBalance().length;
@@ -205,6 +214,6 @@ public class Game {
             viewBalance.addRow(rowArray.toArray(new String[0]));
         }
         viewBalance.print();
-
+        System.out.println();
     }
 }

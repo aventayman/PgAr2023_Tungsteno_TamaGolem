@@ -30,7 +30,7 @@ public class GameInit {
     public static void printTitle() throws InterruptedException {
         System.out.println(Title.createTitle(TITLE, true) + "\n");
         System.out.println(WELCOME + "\n");
-        Menu.wait(DELAY * 5);
+        Menu.wait(DELAY * 4);
     }
 
     /**

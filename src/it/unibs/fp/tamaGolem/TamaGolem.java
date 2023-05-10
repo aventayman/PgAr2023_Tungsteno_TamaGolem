@@ -11,14 +11,18 @@ public class TamaGolem {
 
 
     /**
-     * Nomi belli dei Tamagolem che combatteranno
+     * Nomi bellissimi dei Tamagolem che combatteranno
      */
     private enum tamagolemNames {
-        PIPPO, FRANCO, FRANCESCO, ARTURO, GUIDO, FRANGO, ANNIBALE, BROK, CESCO, FRANCESCHINO
+        PIPPO, FRANCO, FRANCESCO, ARTURO, GUIDO, FRANGO, ANNIBALE, BROK, CESCO, FRANCESCHINO,
+        CALOGERO, GIOVANNI, ARMANDO, GABIBBO, BENITO, GIOVANNINO, GORAN, IGOR, GIANNINO, FELICE,
+        PASQUALE, ALFREDO, GUSTAVO, CELESTINO, BRUNO, CANDIDO, LINO, NANDO, DONATO, VIRGINIO,
+        CARMELO, NATALE, GINO, FULVIO, SALVATORE, CROCIFISSO, ANTONIO, ROSARIO, SILVESTRO,
+        GIANNI, ALBERTO, FIORINDO, FREDERICO, CAYMANO, MIRCCO
     }
 
     /**
-     * Set di un tamagolem, con la sua lista di pietre, i suoi hp e il suo nome, scelto randomicamente
+     * Costruttore di TamaGolem, con la sua lista di pietre, i suoi hp e il suo nome, scelto randomicamente
      * @param stoneList la lista di pietre da dare al golem
      * @param hp il suoi hp massimi
      */

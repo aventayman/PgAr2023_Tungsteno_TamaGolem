@@ -182,6 +182,11 @@ public class Balance {
         return validMatrix(matrix);
     }
 
+    /**
+     * Metodo per controllare che tutta la matrice sia valida in base alle condizioni date
+     * @param matrix la matrice su cui si vuole eseguire il controllo
+     * @return se la matrice è valida ritorna true, in caso contrario ritorna false
+     */
     private boolean validMatrix(int [][] matrix) {
         int rowAdder = 0;
         int zeroCounter = 0;

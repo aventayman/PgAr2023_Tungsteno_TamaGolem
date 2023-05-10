@@ -17,11 +17,14 @@ public class Fight {
     private static final String NO_DAMAGE_DEALT = COMMAND_SIGN + "None of the two TamaGolems was hurt!";
     private static final String SAME_LIST = COMMAND_SIGN + RED_ATTENTION + "\n" + COMMAND_SIGN
             + "You chose the same elements as the other player. Please choose again.";
-    private static final String DEAD_GOLEM = PrettyStrings.colorString("DIED!", AnsiColors.RED);
+    private static final String [] DEAD_GOLEM = new String [] {"%s just KILLED %s with his last stone!",
+            "%s has put %s K.O. with his last move!", "After an EPIC FIGHT %s came up on top and DESTROYED %s!",
+            "%s has OBLITERATED %s with his last move!", "Hold on to your seats because and EARTHQUAKE is coming," +
+            " %s just CRUMBLED %s into small pieces!"};
     private static final String WIN_MESSAGE = "won";
     private static final String TURN = COMMAND_SIGN + PrettyStrings.colorString("TURN %d", AnsiColors.GREEN);
     private static final String PRESS_INSERT = "Press anything and enter to continue:";
-    private static final int DELAY = 1000;
+    private static final int DELAY = 1500;
 
     /**
      * Metodo che stampa la chest restituisce una lista di elementi scelti dal giocatore
@@ -84,15 +87,21 @@ public class Fight {
             //Se il damageDealt è positivo, vuol dire che golem1 infligge danni, in caso contrario li riceve
             if (damageDealt > 0) {
                 golem2.setHp(golem2.getHp() - damageDealt);
-                System.out.printf(DAMAGE_DEALT + "\n", PrettyStrings.colorString(golem1.getName(), AnsiColors.RED),
-                        golem1.getStoneList().get(stoneIndex) , damageDealt,
-                        PrettyStrings.colorString(golem2.getName(), AnsiColors.BLUE), golem2.getStoneList().get(stoneIndex));
+                //Solo se i golem sono ancora entrambi vivi stampo a schermo i danni e le pietre utilizzate
+                if (golem2.getHp() > 0)
+                    System.out.printf(DAMAGE_DEALT + "\n", PrettyStrings.colorString(golem1.getName(), AnsiColors.RED),
+                            golem1.getStoneList().get(stoneIndex) , damageDealt,
+                            PrettyStrings.colorString(golem2.getName(), AnsiColors.BLUE),
+                            golem2.getStoneList().get(stoneIndex));
             }
             else if (damageDealt < 0) {
                 golem1.setHp(golem1.getHp() + damageDealt);
-                System.out.printf(DAMAGE_DEALT + "\n", PrettyStrings.colorString(golem2.getName(), AnsiColors.BLUE),
-                        golem2.getStoneList().get(stoneIndex), -damageDealt,
-                        PrettyStrings.colorString(golem1.getName(), AnsiColors.RED), golem1.getStoneList().get(stoneIndex));
+                //Solo se i golem sono ancora entrambi vivi stampo a schermo i danni e le pietre utilizzate
+                if (golem1.getHp() > 0)
+                    System.out.printf(DAMAGE_DEALT + "\n", PrettyStrings.colorString(golem2.getName(), AnsiColors.BLUE),
+                            golem2.getStoneList().get(stoneIndex), -damageDealt,
+                            PrettyStrings.colorString(golem1.getName(), AnsiColors.RED),
+                            golem1.getStoneList().get(stoneIndex));
             }
             //Caso in cui le pietre sono uguali, e quindi il danno è nullo
             else
@@ -103,14 +112,16 @@ public class Fight {
 
         //Se il golem1 non ha più hp, compare il messaggio relativo...
         if (golem1.getHp() <= 0){
-            System.out.println(COMMAND_SIGN + PrettyStrings.colorString(
-                    golem1.getName(), AnsiColors.RED) + " " + DEAD_GOLEM);
+            System.out.printf(COMMAND_SIGN + DEAD_GOLEM [RandomDraws.drawInteger(0, DEAD_GOLEM.length)] + "%n",
+                    PrettyStrings.colorString(golem2.getName(), AnsiColors.BLUE),
+                    PrettyStrings.colorString(golem1.getName(), AnsiColors.RED));
         }
 
         //...in caso contrario, compare il messaggio relativo all'altro golem
-        else{
-            System.out.println(COMMAND_SIGN + PrettyStrings.colorString(
-                    golem2.getName(), AnsiColors.BLUE) + " " + DEAD_GOLEM);
+        else {
+            System.out.printf(COMMAND_SIGN + DEAD_GOLEM[RandomDraws.drawInteger(0, DEAD_GOLEM.length - 1)] + "%n",
+                    PrettyStrings.colorString(golem1.getName(), AnsiColors.RED),
+                    PrettyStrings.colorString(golem2.getName(), AnsiColors.BLUE));
         }
         InputData.readString(PRESS_INSERT, false);
         Menu.clearConsole();
@@ -212,13 +223,13 @@ public class Fight {
         //è sconfitto. Di conseguenza verrà stampato il nome del player2
         if (currentGolem1 == null)
             System.out.println(PrettyStrings.colorString(Title.createTitle(
-                    game.getPlayer2().getName() + " " + WIN_MESSAGE, true) + "%n",
+                    game.getPlayer2().getName() + " " + WIN_MESSAGE, true) + "\n",
                     game.getPlayer2().getColor()));
 
         //altrimenti verrà stampato il nome del player1, che avrà una lista di golem piena (e quindi non null)
         else
             System.out.println(PrettyStrings.colorString(Title.createTitle(
-                    game.getPlayer1().getName() + " " + WIN_MESSAGE, true) + "%n",
+                    game.getPlayer1().getName() + " " + WIN_MESSAGE, true) + "\n",
                     game.getPlayer1().getColor()));
     }
 }
